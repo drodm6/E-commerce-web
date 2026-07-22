@@ -15,5 +15,5 @@ export function money(n) {
 
 export const SHIPPING_FLAT = 4.99;
 export const FREE_SHIP_THRESHOLD = 50;
-export const WHATSAPP_NUMBER = "07509225927";
+export const WHATSAPP_NUMBER = "0000000000";
 export const ADMIN_PASSWORD = "admin123"; // change this before real use
