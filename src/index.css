@@ -1,0 +1,123 @@
+:root {
+  --bg: #000000;
+  --panel: #111111;
+  --panel-2: #161616;
+  --border: #2a2a2a;
+  --amber: #ff9900;
+  --amber-dim: #cc7a00;
+  --yellow: #ffd814;
+  --yellow-dark: #f0c14b;
+  --text: #eeeeee;
+  --text-dim: #a7a7a7;
+  --link: #5fb3ff;
+  --danger: #ff5c5c;
+  --success: #39d67a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+}
+
+#root {
+  min-height: 100vh;
+  background: var(--bg);
+}
+
+a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+}
+
+select,
+input[type="number"],
+input[type="text"],
+input[type="password"],
+textarea {
+  background: #1c1c1c;
+  color: #eee;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 13px;
+  font-family: inherit;
+}
+
+.btn-yellow {
+  background: linear-gradient(180deg, var(--yellow), var(--yellow-dark));
+  border: 1px solid #a88734;
+  color: #111;
+  font-weight: 700;
+  padding: 9px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.btn-yellow:hover {
+  filter: brightness(1.05);
+}
+.btn-yellow:active {
+  transform: scale(0.98);
+}
+.btn-yellow:disabled {
+  background: #333;
+  color: #777;
+  cursor: not-allowed;
+  border-color: #333;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.btn-outline:hover {
+  border-color: var(--amber);
+  color: var(--amber);
+}
+
+.btn-danger {
+  background: transparent;
+  border: 1px solid #4a2020;
+  color: var(--danger);
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+}
+.btn-danger:hover {
+  background: #2a1010;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+th,
+td {
+  border-bottom: 1px solid var(--border);
+  padding: 8px;
+  text-align: left;
+}
+th {
+  color: var(--text-dim);
+  font-weight: 600;
+}
