@@ -9,10 +9,6 @@ import { loadProducts, saveProducts, loadOrders, saveOrders, loadCart, saveCart 
 import { uid } from "./utils/helpers.js";
 import "./App.css";
 
-// Admin panel route: not linked anywhere in the UI. Visit yoursite.com/#admin
-// to reach it. This is a simple client-side password gate (see
-// src/utils/helpers.js -> ADMIN_PASSWORD) — fine for a personal/small
-// storefront, but swap in real authentication before handling real customers.
 
 export default function App() {
   const [route, setRoute] = useState(window.location.hash === "#admin" ? "admin" : "shop");
