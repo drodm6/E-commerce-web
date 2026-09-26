@@ -1,49 +1,53 @@
-import { useState } from "react";
-import { money } from "../utils/helpers";
+import { ProductVisual } from "./GarmentArt.jsx";
+import { money } from "../utils/helpers.js";
 import "./ProductCard.css";
 
-function Stars({ rating }) {
-  const full = Math.round(rating);
-  return (
-    <span className="stars">
-      {"★".repeat(full)}
-      {"☆".repeat(5 - full)}
-    </span>
-  );
+export function stockBadge(p) {
+  if (p.stock <= 0) return { label: "Sold out", tone: "out" };
+  if (p.stock <= 5) return { label: `Only ${p.stock} left`, tone: "low" };
+  return null;
 }
 
-export default function ProductCard({ product, onAdd }) {
-  const [qty, setQty] = useState(1);
-  const outOfStock = product.stock <= 0;
-  const maxQty = Math.min(product.stock, 10) || 1;
+export default function ProductCard({ product, index, onOpen }) {
+  const stock = stockBadge(product);
+  const soldOut = product.stock <= 0;
 
   return (
-    <div className="card">
-      <div className="thumb">{product.emoji || "📦"}</div>
-      <div className="p-name">{product.name}</div>
-      <div className="row">
-        <Stars rating={product.rating} />
-        <span className="rev-count">{product.reviews}</span>
-      </div>
-      <div className="price">{money(product.price)}</div>
+    <article className={"p-card" + (soldOut ? " is-out" : "")} style={{ "--i": Math.min(index, 12) }}>
+      <button
+        type="button"
+        className="p-card-hit"
+        onClick={(e) => onOpen(product, e.currentTarget.querySelector(".p-media").getBoundingClientRect())}
+        aria-label={`${product.name}, ${money(product.price)}. View details`}
+      >
+        <span className="p-media">
+          <ProductVisual product={product} />
+          <span className="p-badges">
+            {product.isNew && <span className="badge badge-new">New</span>}
+            {product.compareAt && <span className="badge badge-sale">Sale</span>}
+            {stock && <span className={`badge badge-${stock.tone}`}>{stock.label}</span>}
+          </span>
+          <span className="p-quick">View details</span>
+        </span>
 
-      {outOfStock ? (
-        <div className="stock-out">Out of stock</div>
-      ) : (
-        <div className="row">
-          <select value={qty} onChange={(e) => setQty(Number(e.target.value))}>
-            {Array.from({ length: maxQty }, (_, i) => i + 1).map((n) => (
-              <option key={n} value={n}>
-                {n}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-
-      <button className="btn-yellow" disabled={outOfStock} onClick={() => onAdd(product, qty)}>
-        {outOfStock ? "Unavailable" : "Add to Cart"}
+        <span className="p-info">
+          <span className="p-cat">{product.category}</span>
+          <span className="p-name">{product.name}</span>
+          <span className="p-bottom">
+            <span className="p-price">
+              {money(product.price)}
+              {product.compareAt && <s>{money(product.compareAt)}</s>}
+            </span>
+            {product.colors.length > 0 && (
+              <span className="p-swatches" aria-label={`${product.colors.length} colours`}>
+                {product.colors.slice(0, 4).map((c) => (
+                  <span key={c.name} className="swatch-dot" style={{ background: c.hex }} title={c.name} />
+                ))}
+              </span>
+            )}
+          </span>
+        </span>
       </button>
-    </div>
+    </article>
   );
 }

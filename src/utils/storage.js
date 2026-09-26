@@ -1,65 +1,75 @@
-// All persistence for this project lives in the browser's localStorage.
-// That means data is saved per-browser/per-device (not shared between
-// different customers' computers) unless you replace this with a real
-// backend/database later. Each function is wrapped in try/catch so a
-// storage failure (e.g. private browsing mode) never crashes the app.
+// All persistence lives in the browser's localStorage, so data is saved
+// per-browser/per-device. Anything read back is treated as untrusted
+// (it can be edited in devtools) and is re-validated before use.
+// Every call is wrapped in try/catch so a storage failure (private
+// browsing, quota exceeded) never crashes the app.
+
+import { sanitizeProducts, sanitizeOrders } from "./validate.js";
 
 const KEYS = {
-  PRODUCTS: "zonlet_products",
-  ORDERS: "zonlet_orders",
-  CART: "zonlet_cart",
+  CATALOG_DRAFT: "frost_catalog_draft", // admin's unpublished product edits
+  MY_ORDERS: "frost_my_orders", // orders the customer placed on this device
+  CART: "frost_cart",
+  ADMIN_ORDERS: "frost_admin_orders", // orders the owner logged in the admin panel
+  ADMIN_GUARD: "frost_admin_guard", // failed-login counter / lockout
 };
 
-export function loadProducts() {
+// Clean up keys from the old "Zonlet" version of the site.
+try {
+  ["zonlet_products", "zonlet_orders", "zonlet_cart"].forEach((k) => localStorage.removeItem(k));
+} catch {
+  /* storage unavailable */
+}
+
+function read(key, fallback) {
   try {
-    const raw = localStorage.getItem(KEYS.PRODUCTS);
-    return raw ? JSON.parse(raw) : null;
-  } catch (e) {
-    console.error("Failed to load products from storage:", e);
-    return null;
+    const raw = localStorage.getItem(key);
+    if (!raw || raw.length > 4_000_000) return fallback;
+    return JSON.parse(raw);
+  } catch {
+    return fallback;
   }
 }
 
-export function saveProducts(products) {
+function write(key, value) {
   try {
-    localStorage.setItem(KEYS.PRODUCTS, JSON.stringify(products));
+    localStorage.setItem(key, JSON.stringify(value));
+    return true;
   } catch (e) {
-    console.error("Failed to save products to storage:", e);
+    console.error("Could not save to browser storage:", e);
+    return false;
   }
 }
 
-export function loadOrders() {
+function remove(key) {
   try {
-    const raw = localStorage.getItem(KEYS.ORDERS);
-    return raw ? JSON.parse(raw) : [];
-  } catch (e) {
-    console.error("Failed to load orders from storage:", e);
-    return [];
+    localStorage.removeItem(key);
+  } catch {
+    /* ignore */
   }
 }
 
-export function saveOrders(orders) {
-  try {
-    localStorage.setItem(KEYS.ORDERS, JSON.stringify(orders));
-  } catch (e) {
-    console.error("Failed to save orders to storage:", e);
-  }
-}
+export const loadCatalogDraft = () => {
+  const raw = read(KEYS.CATALOG_DRAFT, null);
+  return Array.isArray(raw) ? sanitizeProducts(raw) : null;
+};
+export const saveCatalogDraft = (products) => write(KEYS.CATALOG_DRAFT, products);
+export const clearCatalogDraft = () => remove(KEYS.CATALOG_DRAFT);
 
-export function loadCart() {
-  try {
-    const raw = localStorage.getItem(KEYS.CART);
-    return raw ? JSON.parse(raw) : [];
-  } catch (e) {
-    console.error("Failed to load cart from storage:", e);
-    return [];
-  }
-}
+export const loadMyOrders = () => sanitizeOrders(read(KEYS.MY_ORDERS, []));
+export const saveMyOrders = (orders) => write(KEYS.MY_ORDERS, orders);
 
-export function saveCart(cart) {
-  try {
-    localStorage.setItem(KEYS.CART, JSON.stringify(cart));
-  } catch (e) {
-    console.error("Failed to save cart to storage:", e);
-  }
-}
+export const loadCartRaw = () => read(KEYS.CART, []);
+export const saveCart = (cart) => write(KEYS.CART, cart);
+
+export const loadAdminOrders = () => sanitizeOrders(read(KEYS.ADMIN_ORDERS, []));
+export const saveAdminOrders = (orders) => write(KEYS.ADMIN_ORDERS, orders);
+
+export const loadGuard = () => {
+  const g = read(KEYS.ADMIN_GUARD, {});
+  return {
+    fails: Number.isInteger(g.fails) && g.fails >= 0 ? g.fails : 0,
+    lockedUntil: Number.isFinite(g.lockedUntil) ? g.lockedUntil : 0,
+  };
+};
+export const saveGuard = (g) => write(KEYS.ADMIN_GUARD, g);

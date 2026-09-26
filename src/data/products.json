@@ -1,0 +1,263 @@
+[
+  {
+    "id": "P-1001",
+    "name": "Camel Wool-Blend Long Coat",
+    "category": "Coats",
+    "art": "coat",
+    "price": 64,
+    "compareAt": 79,
+    "stock": 12,
+    "sizes": ["S", "M", "L", "XL"],
+    "colors": [
+      { "name": "Camel", "hex": "#b5835a" },
+      { "name": "Espresso", "hex": "#3b2a20" },
+      { "name": "Black", "hex": "#1a1512" }
+    ],
+    "images": [],
+    "desc": "A double-breasted overcoat in a soft wool blend that sits just below the knee. Structured shoulders, a detachable tie belt and deep welt pockets make it the piece you'll reach for every cold morning.",
+    "material": "60% wool blend, 40% polyester · satin lining",
+    "fit": "Relaxed fit · runs small, we suggest one size up",
+    "care": "Dry clean only",
+    "isNew": true,
+    "featured": true
+  },
+  {
+    "id": "P-1002",
+    "name": "Cropped Cloud Puffer Jacket",
+    "category": "Jackets",
+    "art": "puffer",
+    "price": 48,
+    "compareAt": null,
+    "stock": 18,
+    "sizes": ["S", "M", "L", "XL"],
+    "colors": [
+      { "name": "Cream", "hex": "#efe4d2" },
+      { "name": "Mocha", "hex": "#6f4e37" },
+      { "name": "Black", "hex": "#1a1512" }
+    ],
+    "images": [],
+    "desc": "Pillowy, lightweight and seriously warm. A cropped puffer with a high stand collar, two-way zip and elastic cuffs that keep the wind out.",
+    "material": "Water-resistant nylon shell · 250g padding",
+    "fit": "Boxy cropped fit · true to size",
+    "care": "Machine wash cold, gentle cycle",
+    "isNew": true,
+    "featured": true
+  },
+  {
+    "id": "P-1003",
+    "name": "Chunky Cable-Knit Sweater",
+    "category": "Knitwear",
+    "art": "sweater",
+    "price": 29.5,
+    "compareAt": null,
+    "stock": 25,
+    "sizes": ["S", "M", "L", "XL"],
+    "colors": [
+      { "name": "Oat", "hex": "#e3d5bd" },
+      { "name": "Cocoa", "hex": "#7b5539" },
+      { "name": "Charcoal", "hex": "#2b2724" }
+    ],
+    "images": [],
+    "desc": "Classic cable knit with a relaxed drop shoulder and ribbed trims. Thick enough to wear alone, soft enough to layer under a coat.",
+    "material": "Acrylic & wool blend knit",
+    "fit": "Oversized fit",
+    "care": "Hand wash cold, dry flat",
+    "isNew": false,
+    "featured": true
+  },
+  {
+    "id": "P-1004",
+    "name": "Fleece-Lined Oversized Hoodie",
+    "category": "Hoodies",
+    "art": "hoodie",
+    "price": 26,
+    "compareAt": 32,
+    "stock": 30,
+    "sizes": ["S", "M", "L", "XL", "XXL"],
+    "colors": [
+      { "name": "Mocha", "hex": "#6f4e37" },
+      { "name": "Sand", "hex": "#d8c3a5" },
+      { "name": "Black", "hex": "#1a1512" }
+    ],
+    "images": [],
+    "desc": "Heavyweight hoodie brushed with warm fleece inside. Double-layer hood, kangaroo pocket and a slouchy oversized shape.",
+    "material": "Cotton-poly blend · brushed fleece lining",
+    "fit": "Oversized fit · runs small, we suggest one size up",
+    "care": "Machine wash cold, inside out",
+    "isNew": false,
+    "featured": false
+  },
+  {
+    "id": "P-1005",
+    "name": "Faux Shearling Aviator Jacket",
+    "category": "Jackets",
+    "art": "coat",
+    "price": 58,
+    "compareAt": null,
+    "stock": 5,
+    "sizes": ["S", "M", "L", "XL"],
+    "colors": [
+      { "name": "Chocolate", "hex": "#4a3326" },
+      { "name": "Black", "hex": "#1a1512" }
+    ],
+    "images": [],
+    "desc": "A faux-suede aviator jacket with a plush faux-shearling collar and lining. Belted hem, zip cuffs and an attitude that goes with everything.",
+    "material": "Faux suede outer · faux shearling lining",
+    "fit": "Regular fit · runs small, we suggest one size up",
+    "care": "Spot clean only",
+    "isNew": true,
+    "featured": false
+  },
+  {
+    "id": "P-1006",
+    "name": "Ribbed Turtleneck Knit",
+    "category": "Knitwear",
+    "art": "sweater",
+    "price": 19.9,
+    "compareAt": null,
+    "stock": 40,
+    "sizes": ["S", "M", "L", "XL"],
+    "colors": [
+      { "name": "Cream", "hex": "#efe4d2" },
+      { "name": "Chocolate", "hex": "#4a3326" },
+      { "name": "Black", "hex": "#1a1512" }
+    ],
+    "images": [],
+    "desc": "The essential winter base layer. A fine-ribbed turtleneck that hugs without clinging and tucks neatly into trousers.",
+    "material": "Viscose & nylon rib knit",
+    "fit": "Slim fit · true to size",
+    "care": "Machine wash cold, dry flat",
+    "isNew": false,
+    "featured": false
+  },
+  {
+    "id": "P-1007",
+    "name": "Wide-Leg Wool-Feel Trousers",
+    "category": "Trousers",
+    "art": "trousers",
+    "price": 32,
+    "compareAt": null,
+    "stock": 20,
+    "sizes": ["S", "M", "L", "XL"],
+    "colors": [
+      { "name": "Espresso", "hex": "#3b2a20" },
+      { "name": "Taupe", "hex": "#a08a74" },
+      { "name": "Black", "hex": "#1a1512" }
+    ],
+    "images": [],
+    "desc": "High-waisted, pressed-crease trousers in a brushed wool-feel fabric. Falls straight and long — lovely with boots.",
+    "material": "Brushed polyester-viscose blend",
+    "fit": "High waist, wide leg · true to size",
+    "care": "Machine wash cold",
+    "isNew": false,
+    "featured": false
+  },
+  {
+    "id": "P-1008",
+    "name": "Oversized Knit Scarf",
+    "category": "Accessories",
+    "art": "scarf",
+    "price": 14.5,
+    "compareAt": null,
+    "stock": 35,
+    "sizes": [],
+    "colors": [
+      { "name": "Camel", "hex": "#b5835a" },
+      { "name": "Cream", "hex": "#efe4d2" },
+      { "name": "Chocolate", "hex": "#4a3326" }
+    ],
+    "images": [],
+    "desc": "A generous blanket-weight scarf with fringed ends. Wrap it twice, drape it over a coat, or wear it as a shawl.",
+    "material": "Soft acrylic knit",
+    "fit": "One size · 200 × 60 cm",
+    "care": "Hand wash cold",
+    "isNew": false,
+    "featured": true
+  },
+  {
+    "id": "P-1009",
+    "name": "Ribbed Beanie with Pom",
+    "category": "Accessories",
+    "art": "beanie",
+    "price": 9.9,
+    "compareAt": null,
+    "stock": 50,
+    "sizes": [],
+    "colors": [
+      { "name": "Oat", "hex": "#e3d5bd" },
+      { "name": "Mocha", "hex": "#6f4e37" },
+      { "name": "Black", "hex": "#1a1512" }
+    ],
+    "images": [],
+    "desc": "Chunky rib beanie with a fold-over cuff and a faux-fur pom. Fleece-lined band for extra warmth over the ears.",
+    "material": "Acrylic knit · fleece band",
+    "fit": "One size fits most",
+    "care": "Hand wash cold",
+    "isNew": false,
+    "featured": false
+  },
+  {
+    "id": "P-1010",
+    "name": "Touchscreen Knit Mittens",
+    "category": "Accessories",
+    "art": "gloves",
+    "price": 8.5,
+    "compareAt": null,
+    "stock": 45,
+    "sizes": ["S/M", "M/L"],
+    "colors": [
+      { "name": "Camel", "hex": "#b5835a" },
+      { "name": "Cream", "hex": "#efe4d2" },
+      { "name": "Black", "hex": "#1a1512" }
+    ],
+    "images": [],
+    "desc": "Cosy knit mittens with a flip-top so you can use your phone without taking them off.",
+    "material": "Acrylic knit · plush lining",
+    "fit": "Stretch fit",
+    "care": "Hand wash cold",
+    "isNew": false,
+    "featured": false
+  },
+  {
+    "id": "P-1011",
+    "name": "Fleece-Lined Chelsea Boots",
+    "category": "Footwear",
+    "art": "boots",
+    "price": 42,
+    "compareAt": 49,
+    "stock": 14,
+    "sizes": ["36", "37", "38", "39", "40", "41"],
+    "colors": [
+      { "name": "Chocolate", "hex": "#4a3326" },
+      { "name": "Black", "hex": "#1a1512" }
+    ],
+    "images": [],
+    "desc": "Pull-on Chelsea boots with elastic side panels, a warm fleece lining and a chunky anti-slip sole for icy streets.",
+    "material": "Faux leather upper · fleece lining · rubber sole",
+    "fit": "EU sizing · true to size",
+    "care": "Wipe clean",
+    "isNew": true,
+    "featured": false
+  },
+  {
+    "id": "P-1012",
+    "name": "Longline Quilted Puffer Coat",
+    "category": "Coats",
+    "art": "puffer",
+    "price": 72,
+    "compareAt": null,
+    "stock": 3,
+    "sizes": ["S", "M", "L", "XL"],
+    "colors": [
+      { "name": "Espresso", "hex": "#3b2a20" },
+      { "name": "Oat", "hex": "#e3d5bd" }
+    ],
+    "images": [],
+    "desc": "Maximum warmth, head to calf. A longline puffer with a detachable hood, side slits for easy walking and inner storm cuffs.",
+    "material": "Matte nylon shell · 300g padding",
+    "fit": "Regular fit · true to size",
+    "care": "Machine wash cold, gentle cycle",
+    "isNew": false,
+    "featured": true
+  }
+]
