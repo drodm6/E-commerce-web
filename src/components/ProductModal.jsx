@@ -1,9 +1,9 @@
 import { useLayoutEffect, useRef, useState, useId } from "react";
 import { ProductVisual } from "./GarmentArt.jsx";
 import { stockBadge } from "./ProductCard.jsx";
-import { IconClose, IconMinus, IconPlus, IconShip, IconCash, IconWhatsApp, IconRuler, IconCheck } from "./Icons.jsx";
+import { IconClose, IconMinus, IconPlus, IconShip, IconCash, IconWhatsApp, IconRuler, IconCheck, IconTruck } from "./Icons.jsx";
 import { useDialog } from "../hooks/useDialog.js";
-import { money, prefersReducedMotion, whatsappLink } from "../utils/helpers.js";
+import { money, moneyWhole, prefersReducedMotion, whatsappLink } from "../utils/helpers.js";
 import { LIMITS } from "../utils/validate.js";
 import { STORE } from "../config.js";
 import "./ProductModal.css";
@@ -244,6 +244,12 @@ export default function ProductModal({ product, originRect, onClose, onAdd }) {
           </div>
 
           <ul className="pm-perks">
+            <li>
+              <IconTruck size={20} />
+              <span>
+                <b>Free delivery over {moneyWhole(STORE.freeShippingThreshold)}</b> to your address — anywhere in Iraq &amp; Kurdistan
+              </span>
+            </li>
             <li>
               <IconShip size={20} />
               <span>

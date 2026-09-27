@@ -1,19 +1,26 @@
 # Frost — Winter Clothing Shop
 
-A boutique storefront for a small winter clothing business, built with **React + Vite**.
-Warm brown, black and cream design; every product opens in a smooth, detailed
-view; customers get a clear receipt to screenshot and send on **WhatsApp**; and a
-secured admin panel helps you manage products, orders and your **sea-shipment
-batches**.
+An online shop for a small winter clothing business, with a **React** website
+and a **Node.js + Express** backend. Customers browse, choose sizes and colours,
+and place a cash-on-delivery order. They then send their receipt screenshot on
+**WhatsApp**. You manage everything from a private, secured dashboard.
 
-**How the business works (and how the site supports it):**
+- 🚚 **Free delivery to your door on orders over $80**
+- 📍 **Delivery to all of Iraq & Kurdistan** (every governorate)
+- 💵 **Cash on delivery** · pre-orders shipped together by sea
 
-1. You post pieces from your suppliers on the site and on Instagram.
-2. A customer picks a size and colour, places an order and gets a **receipt with an order number**.
-3. They **screenshot the receipt and send it to you on WhatsApp**. The message is pre-written for them.
-4. You paste their WhatsApp message into **Admin → Orders → Import**. The order appears, checked against your prices.
-5. When enough orders are confirmed, **Admin → Batch** gives you the combined supplier shopping list. You order everything together and ship it by sea to keep costs low.
-6. The customer pays **cash on delivery**.
+---
+
+## How the business flow works
+
+1. A customer picks pieces, chooses their **governorate**, city and address, and places the order.
+2. The **server** checks stock, sets the real prices and saves the order. The customer gets a receipt with a unique order number.
+3. They **screenshot the receipt and send it to you on WhatsApp**. The message is pre-written.
+4. In your dashboard, go to **Orders → Check a WhatsApp receipt** and type the order number from the screenshot.
+   You see the real order — customer, phone, full address, every item with size, colour and price, and the total — so you can confirm the screenshot matches.
+   Then click **"Receipt matches — confirm order"**.
+5. **Batch & supplier** adds up all confirmed orders into one shopping list for your supplier. You order everything together and ship it by sea.
+6. You deliver and collect the cash.
 
 ---
 
@@ -21,24 +28,20 @@ batches**.
 
 <table>
   <tr>
-    <td width="50%" valign="top"><img src="screenshots/home.png" alt="Frost home page with layered hero" /><p align="center"><em>Home: layered hero, pre-order info</em></p></td>
-    <td width="50%" valign="top"><img src="screenshots/shop.png" alt="Product grid with categories, search and sort" /><p align="center"><em>The Winter Edit: categories, search, sort</em></p></td>
+    <td width="50%" valign="top"><img src="screenshots/home.png" alt="Home page" /><p align="center"><em>Home: delivery promises up front</em></p></td>
+    <td width="50%" valign="top"><img src="screenshots/shop.png" alt="Product grid" /><p align="center"><em>Clean, light product grid</em></p></td>
   </tr>
   <tr>
-    <td width="50%" valign="top"><img src="screenshots/product.png" alt="Product detail view with colour, size and size guide" /><p align="center"><em>Product view zooms out of the card: colours, sizes, size guide</em></p></td>
-    <td width="50%" valign="top"><img src="screenshots/bag.png" alt="Shopping bag drawer" /><p align="center"><em>Bag: free-delivery progress, pre-order note, totals</em></p></td>
+    <td width="50%" valign="top"><img src="screenshots/product.png" alt="Product details" /><p align="center"><em>Product view: colours, sizes, size guide, delivery info</em></p></td>
+    <td width="50%" valign="top"><img src="screenshots/receipt.png" alt="Receipt" /><p align="center"><em>Receipt to screenshot and send on WhatsApp</em></p></td>
   </tr>
   <tr>
-    <td width="50%" valign="top" align="center"><img src="screenshots/receipt.png" alt="Order receipt on a phone" width="300" /><p align="center"><em>Receipt, sized to fit one phone screenshot</em></p></td>
-    <td width="50%" valign="top" align="center"><img src="screenshots/mobile-product.png" alt="Product sheet on a phone" width="300" /><p align="center"><em>On phones, products slide up as a sheet</em></p></td>
+    <td width="50%" valign="top"><img src="screenshots/admin-order-detail.png" alt="Order detail in the dashboard" /><p align="center"><em>Dashboard: full order detail to check a receipt</em></p></td>
+    <td width="50%" valign="top"><img src="screenshots/admin-login.png" alt="Dashboard sign-in" /><p align="center"><em>Sign-in with password + authenticator code</em></p></td>
   </tr>
   <tr>
-    <td width="50%" valign="top"><img src="screenshots/admin-overview.png" alt="Admin dashboard" /><p align="center"><em>Admin dashboard and store-health checks</em></p></td>
-    <td width="50%" valign="top"><img src="screenshots/admin-products.png" alt="Admin product list" /><p align="center"><em>Products: add, edit, duplicate, export</em></p></td>
-  </tr>
-  <tr>
-    <td width="50%" valign="top"><img src="screenshots/admin-orders.png" alt="Import an order from a WhatsApp message" /><p align="center"><em>Import an order straight from the WhatsApp message</em></p></td>
-    <td width="50%" valign="top"><img src="screenshots/admin-batch.png" alt="Batch progress and supplier list" /><p align="center"><em>Batch progress and the supplier shopping list</em></p></td>
+    <td width="50%" valign="top"><img src="screenshots/admin-overview.png" alt="Dashboard overview" /><p align="center"><em>Overview, security checks and activity log</em></p></td>
+    <td width="50%" valign="top"><img src="screenshots/admin-batch.png" alt="Batch and supplier list" /><p align="center"><em>Batch progress and supplier shopping list</em></p></td>
   </tr>
 </table>
 
@@ -49,133 +52,142 @@ batches**.
 You need [Node.js](https://nodejs.org) **20.19 or newer**.
 
 ```bash
-npm install                 # once
-npm run set-admin-password  # once: choose your admin password
-npm run dev                 # start the site at http://localhost:5173
+npm install          # once
+npm run setup-admin  # once: set your dashboard password + authenticator app
+npm run dev          # starts the website AND the API together
 ```
 
-- **Store:** http://localhost:5173
-- **Admin:** http://localhost:5173/#admin (not linked anywhere on the store)
+- **Shop:** http://localhost:5173
+- **Dashboard:** http://localhost:5173/#dabo — the address is secret and not linked anywhere. `#admin` does nothing.
 
-### Before you go live, edit `src/config.js`
+### Setting up your dashboard sign-in (`npm run setup-admin`)
+
+1. Choose a password (at least 12 characters; a short sentence works well).
+2. A **QR code** appears in the terminal. Scan it with **Google Authenticator**, **Microsoft Authenticator** or **Authy** on your phone.
+3. Type the 6-digit code the app shows to confirm.
+
+Every sign-in then needs your **password + the current 6-digit code** from your phone.
+Someone who learns your password still can't get in without your phone.
+
+The script saves your settings to `server/.env`. This file stores only a hash of
+your password, never the password itself, and git ignores it.
+
+### Store settings — `shared/store.js`
 
 | Setting | What it does |
 |---|---|
-| `whatsappNumber` | Your WhatsApp number, **digits only in international format**, e.g. `"9647501234567"` (no `+`, `00` or spaces). Until it's set, the receipt shows a warning instead of the WhatsApp button. |
-| `instagram` | Your Instagram handle without `@` (or `""` to hide it) |
-| `currency` | Currency code and locale for prices |
-| `shippingFlat` / `freeShippingThreshold` | Delivery charge, and the subtotal above which delivery is free |
-| `deliveryEstimate` | Shown everywhere, e.g. `"3–5 weeks"` |
+| `whatsappNumber` | Your WhatsApp number, **digits only in international format**, e.g. `"9647501234567"` |
+| `instagram` | Your Instagram handle without `@` |
+| `shippingFlat` / `freeShippingThreshold` | Delivery charge, and the order amount from which delivery is free (**80**) |
+| `deliveryArea` | Shown to customers ("all of Iraq & Kurdistan") |
+| `deliveryEstimate` | e.g. `"3–5 weeks"` |
 | `batchTarget` | How many confirmed orders you want before placing a supplier order |
 
-### Admin password
-
-There is **no default password**. Run `npm run set-admin-password` and choose one
-(at least 12 characters; a short sentence works well). The script stores only a
-salted **hash** in `.env.local`, which git ignores. Restart `npm run dev` after
-changing it.
-
-When you deploy, add the same line (printed by the script) to your host's
-**environment variables**:
-
-```
-VITE_ADMIN_PASSWORD_HASH=pbkdf2-sha256:600000:....
-```
+The list of governorates customers can choose from is `GOVERNORATES` in the same file.
 
 ---
 
-## Managing products
+## The dashboard (`#dabo`)
 
-1. Open **Admin → Products** and add or edit items. Changes show immediately on
-   *your* device, with a "preview" banner.
-2. To publish them to everyone, click **Download products.json**, replace
-   `src/data/products.json` in the project with it, and redeploy.
-
-**Photos:** use `https://` image links, or put photo files in `public/products/`
-and write `/products/your-photo.jpg`. Products without photos show a styled
-illustration that changes colour with the selected colour.
-
-## Managing orders
-
-- **Import:** copy the customer's whole WhatsApp message and paste it into
-  **Admin → Orders → Import from WhatsApp**. The order code in the message is
-  checked against your catalog. Prices and totals are recalculated, and anything
-  that doesn't match (for example, an edited price) is flagged in red.
-- **Statuses:** New → Confirmed → Ordered from supplier → Shipping by sea →
-  Arrived → Delivered (or Cancelled).
-- **Batch:** the **Batch & supplier** tab adds up every *Confirmed* order into
-  one shopping list (product, size, colour, quantity), which you can export as CSV.
-  Buttons move whole groups of orders through the shipping stages.
-- Export all orders as CSV any time.
-
-> Orders and product drafts are saved in the browser you use for admin
-> (localStorage). Use the same browser and device for admin, and export CSV and
-> JSON regularly as backups.
+- **Overview:** new orders, money to collect, batch progress, stock alerts, security checks and an **activity log** of sign-ins (including failed attempts) and changes.
+- **Orders:** every order appears the moment a customer places it. You can:
+  - **Check a WhatsApp receipt** by order number. If the number doesn't exist, the screenshot is fake or edited.
+  - Open **full details**: customer name, phone (tap to call or WhatsApp), governorate, city, address, note, every item with product ID, size, colour, quantity and price, the total to collect, the status timeline, a private note, and the customer's other orders.
+  - Change status (New → Confirmed → Ordered from supplier → Shipping by sea → Arrived → Delivered, or Cancelled). Cancelling puts the items back in stock.
+  - Search by order number, name, phone, city or address, and export CSV.
+- **Products:** add, edit, duplicate and delete. Changes are **live on the shop immediately**. You can also back up or import the catalog as JSON.
+- **Batch & supplier:** a combined shopping list of all confirmed orders, and buttons to move orders through the shipping stages.
 
 ---
 
-## Build & deploy
+## API
+
+| Method | Path | Who | What |
+|---|---|---|---|
+| GET | `/api/products` | public | Catalog |
+| GET | `/api/products/:id` | public | One product |
+| POST | `/api/orders` | public | Place an order (server sets prices and checks stock) |
+| GET | `/api/orders/:orderNumber` | customer | Their receipt, needs the secret `X-Order-Token` from checkout |
+| POST | `/api/admin/login` | — | Password + 6-digit code → session cookie |
+| GET | `/api/admin/me` · POST `/logout` · `/logout-all` | admin | Session |
+| GET/POST/PUT/DELETE | `/api/admin/products[/:id]` | admin | Manage products |
+| GET | `/api/admin/orders?status=&q=` | admin | List and search orders |
+| GET/PATCH/DELETE | `/api/admin/orders/:orderNumber` | admin | Full detail, update status/note, delete |
+| GET | `/api/admin/audit` | admin | Activity log |
+
+Errors are always JSON: `{ "error": "message", "fields": { … } }`.
+
+---
+
+## Deploying
+
+The site and API run as **one Node.js app** (the server also serves the built
+website). Use a host that runs Node and gives you a **persistent disk** for the
+database, e.g. Render, Railway, Fly.io or a small VPS.
 
 ```bash
-npm run build     # creates dist/
-npm run preview   # test the production build locally
-npm test          # run the security/validation checks
-npm audit         # check dependencies for known vulnerabilities
+npm install
+npm run build        # builds the website into dist/
+npm start            # serves website + API on $PORT (default 4000)
 ```
 
-Upload `dist/` to any static host. Security headers are already configured
-for **Netlify / Cloudflare Pages** (`public/_headers`) and **Vercel**
-(`vercel.json`). Always serve the site over **HTTPS**.
+Set these environment variables on your host. The first three come from your `server/.env`:
+
+| Variable | Value |
+|---|---|
+| `ADMIN_PASSWORD_HASH` | from `server/.env` |
+| `ADMIN_TOTP_SECRET` | from `server/.env` |
+| `JWT_SECRET` | from `server/.env` (required in production) |
+| `NODE_ENV` | `production` |
+| `DB_PATH` | a file on the persistent disk, e.g. `/var/data/frost.db` |
+| `TRUST_PROXY` | `1` (default in production). Set `0` only if nothing sits in front of the server. |
+
+Always use **HTTPS**. The database is a single file; copy `DB_PATH` regularly as a backup.
 
 ---
 
 ## Security
 
-The site was hardened with the **OWASP Top 10** and OWASP cheat sheets in mind:
+Built and checked against the **OWASP Top 10** and OWASP cheat sheets. Run the
+28 automated security and API tests with `npm test`.
 
 | Area | What's in place |
 |---|---|
-| **A02 Cryptographic failures** | Admin password stored only as a salted **PBKDF2-SHA256 hash (600,000 iterations)**, checked with the Web Crypto API and a constant-time comparison. Order numbers use `crypto.getRandomValues`, so they can't be guessed. HSTS header forces HTTPS. |
-| **A03 Injection / XSS** | React escapes all output, and the code never uses `dangerouslySetInnerHTML`. Every input (checkout form, admin form, imported files, pasted WhatsApp codes, anything read back from browser storage) is validated and length-limited. Control, zero-width and bidi-override characters are stripped. Image links must be `https://` or site paths, so `javascript:`, `data:` and `http:` are blocked. Colours must be strict hex. **Strict Content-Security-Policy**: scripts, styles and fonts only from this site, `object-src 'none'`, `base-uri 'self'`. |
-| **A04 Insecure design** | Imported orders are **re-priced from your catalog**, and mismatches are flagged, so a customer can't change a price in the WhatsApp message. Quantities are capped by stock. |
-| **A05 Security misconfiguration** | Security headers: CSP, `X-Frame-Options: DENY` + `frame-ancestors 'none'` (no clickjacking), `nosniff`, strict `Referrer-Policy`, `Permissions-Policy` (camera, mic, location and payment off), COOP/CORP. No source maps in production. Admin page is `noindex`. |
-| **A06 Vulnerable components** | Upgraded to Vite 8 (fixes the esbuild/Vite dev-server advisories). `npm audit` reports **0 vulnerabilities**. Fonts are self-hosted, with no third-party CDN. |
-| **A07 Authentication failures** | No default password; minimum length and common-word checks when setting it; **lockout after 5 failed attempts** (5 min, doubling up to 1 h); **automatic sign-out after 15 minutes idle**; sign-out button; password never kept after a login attempt. |
-| **A08 Data integrity** | Stored data is schema-validated on every load; the admin panel is code-split so its code only downloads on `#admin`. |
-| **Other** | External links use `rel="noopener noreferrer"`. Product images load with `referrerPolicy="no-referrer"`. CSV exports are protected against **CSV/formula injection**. Imported JSON is limited to 1 MB. |
-
-**Please know this limit:** Frost is a *static* site with no server. The admin
-panel only changes data in **your own browser**, and a static site can't hide
-anything from someone who downloads its files. The password hash is in the
-admin code, so choose a **long, unique password**. The admin panel can't be used
-to change what other visitors see: publishing products always goes through
-`products.json` and a redeploy, which is protected by your hosting and Git
-accounts. Turn on two-factor authentication for both. If you later want online
-payments or customer accounts, add a real backend first.
+| **Authentication (A07)** | Password hashed with **scrypt** plus **two-factor codes** (TOTP, RFC 6238), and each code works only once. Constant-time checks. No default password. **Account lock** after 10 failed sign-ins (15 min). Every sign-in and failure is logged. |
+| **Sessions** | Signed **JWT** (HS256, algorithm pinned, issuer/audience checked) in an **httpOnly, SameSite=Strict** cookie scoped to `/api/admin`, so JavaScript can't read it. Each JWT is tied to a server-side session, so **sign-out really revokes it**, including "sign out on every device". 30-minute idle timeout and 8-hour maximum. |
+| **Hidden dashboard** | Moved from `#admin` to `#dabo`, not linked anywhere, and `noindex`. This is only a first layer: every admin API call is blocked without a valid signed-in session. |
+| **Rate limiting** | Sign-in: 5 failed attempts per 15 min per IP. Orders: 10 per hour per IP. Receipt lookups: 60 per 15 min. Admin API: 120 per minute. Whole API: 300 per 15 min. |
+| **Injection & XSS (A03)** | Every input is validated on the server with the same shared rules as the website (types, lengths, allowed values, governorate list). All SQL uses **bound parameters**. React escapes all output. Strict **Content-Security-Policy**: scripts, styles and fonts only from this site; no inline scripts, no framing. |
+| **IDOR (A01)** | Knowing an order number is not enough to see an order. Customers need the secret receipt token given at checkout, and every other case returns the same "not found". Admin routes validate IDs and require a session. |
+| **SSRF** | The server **never fetches URLs** supplied by users. Product photo links must be `https://` or a site path; `javascript:`, `data:`, `file:`, `http:`, internal addresses and `//` tricks are rejected. |
+| **Price tampering (A04)** | The browser only sends product IDs, sizes, colours and quantities. The server looks up prices, computes totals and checks stock inside a database transaction (no overselling). |
+| **CSRF** | SameSite=Strict cookie, a required custom request header, and an Origin check. Cross-site preflights are refused, and only JSON bodies are accepted. |
+| **Headers (A05)** | Helmet: CSP, HSTS (production), `X-Frame-Options: DENY`, `nosniff`, strict Referrer-Policy, COOP/CORP and Permissions-Policy. No `X-Powered-By`, no stack traces in responses, 20 KB body limit. |
+| **Other** | Mass-assignment protection (whitelisted fields only), parameter and prototype pollution tests, a hidden anti-bot form field, `no-store` on personal data, CSV-injection-safe exports, crypto-random order numbers, `npm audit` reporting **0 vulnerabilities**. |
 
 ---
 
 ## Project structure
 
 ```
-├── index.html
-├── vite.config.js            # build config + Content-Security-Policy
-├── vercel.json               # security headers (Vercel)
-├── public/
-│   ├── _headers              # security headers (Netlify / Cloudflare Pages)
-│   ├── favicon.svg
-│   └── products/             # put product photos here
-├── scripts/
-│   └── set-admin-password.mjs
-├── tests/
-│   └── security.test.mjs     # npm test
-└── src/
-    ├── config.js             # ← your store settings
-    ├── App.jsx               # routing (store / #admin)
-    ├── Storefront.jsx        # cart, filters, checkout
-    ├── data/products.json    # ← your published catalog
-    ├── hooks/useDialog.js    # accessible, animated modals
-    ├── utils/                # validation, auth, storage, order codes
-    ├── components/           # Header, Hero, ProductModal, CartDrawer, ReceiptModal…
-    └── admin/                # AdminPanel, Login, Products, Orders, Batch
+├── shared/                  # used by BOTH website and server
+│   ├── store.js             # ← store settings, governorates
+│   ├── validate.js          # all validation rules
+│   └── pricing.js           # totals & free-delivery rule
+├── server/
+│   ├── index.js             # starts the server
+│   ├── app.js               # Express app: security middleware + routes
+│   ├── config.js            # environment variables
+│   ├── db.js                # SQLite schema (seeded from src/data/products.json)
+│   ├── routes/              # public.js, admin.js
+│   ├── repos/               # products.js, orders.js (data access)
+│   ├── security/            # auth (JWT sessions), password, totp, rate limits, CSRF
+│   └── scripts/setup-admin.js
+├── src/                     # React website
+│   ├── api.js               # API client
+│   ├── Storefront.jsx       # shop, bag, checkout
+│   ├── components/          # Header, Hero, ProductModal, CartDrawer, ReceiptModal…
+│   └── admin/               # dashboard (#dabo)
+├── tests/                   # npm test
+└── scripts/dev.mjs          # npm run dev
 ```

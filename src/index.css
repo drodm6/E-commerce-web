@@ -17,29 +17,30 @@
   --caramel: #a9774f;
   --camel: #c49a6c;
 
-  /* Creams */
-  --sand: #dcc9ad;
-  --linen: #e9dcc7;
-  --cream: #f3eadb;
-  --cream-2: #efe3d0;
-  --paper: #fbf7f0;
+  /* Creams — lighter, neutral surfaces so the products stand out */
+  --sand: #d9cab5;
+  --linen: #ebe2d5;
+  --cream: #f6f1ea;
+  --cream-2: #f1eae0;
+  --paper: #ffffff;
 
-  /* Semantic */
-  --bg: var(--cream);
-  --text: #2a1d15;
-  --text-soft: #5e4a3c;
-  --muted: #8a7361;
-  --line: rgba(61, 42, 31, 0.14);
-  --line-strong: rgba(61, 42, 31, 0.26);
-  --on-dark: #f3eadb;
-  --on-dark-soft: rgba(243, 234, 219, 0.66);
+  /* Semantic (text colours meet WCAG AA contrast on white/cream) */
+  --bg: #fbf8f3;
+  --text: #231913;
+  --text-soft: #5b4a3e;
+  --muted: #7a6858;
+  --accent-text: #93582d;
+  --line: rgba(35, 25, 19, 0.1);
+  --line-strong: rgba(35, 25, 19, 0.2);
+  --on-dark: #f6f1ea;
+  --on-dark-soft: rgba(246, 241, 234, 0.72);
   --danger: #a3402c;
-  --success: #3e7a4d;
+  --success: #2f6b40;
   --whatsapp: #178a46;
 
   /* Layers */
-  --shadow-1: 0 1px 2px rgba(26, 18, 14, 0.06), 0 2px 8px rgba(26, 18, 14, 0.05);
-  --shadow-2: 0 2px 4px rgba(26, 18, 14, 0.06), 0 14px 34px -10px rgba(26, 18, 14, 0.22);
+  --shadow-1: 0 1px 2px rgba(35, 25, 19, 0.05), 0 1px 6px rgba(35, 25, 19, 0.04);
+  --shadow-2: 0 2px 4px rgba(35, 25, 19, 0.05), 0 16px 36px -14px rgba(35, 25, 19, 0.2);
   --shadow-3: 0 4px 10px rgba(15, 11, 9, 0.12), 0 30px 70px -18px rgba(15, 11, 9, 0.45);
 
   --radius-sm: 10px;
@@ -156,7 +157,7 @@ button {
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--caramel);
+  color: var(--accent-text);
 }
 
 /* ── Buttons ────────────────────────────────────────────── */
@@ -368,6 +369,7 @@ button {
 .field input,
 .field textarea,
 .field select {
+  color: var(--text);
   width: 100%;
   min-height: 48px;
   padding: 12px 14px;

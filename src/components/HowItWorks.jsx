@@ -20,7 +20,7 @@ const STEPS = [
   {
     icon: IconShip,
     title: "Shipped together, pay at the door",
-    text: `Orders travel together by sea to keep prices low. Arrives in about ${STORE.deliveryEstimate} — pay cash on delivery.`,
+    text: `Orders travel together by sea to keep prices low, then we deliver to your door anywhere in Iraq & Kurdistan in about ${STORE.deliveryEstimate}. Free delivery over $${STORE.freeShippingThreshold}.`,
   },
 ];
 

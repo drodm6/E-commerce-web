@@ -3,14 +3,14 @@ import ProductEditor from "./ProductEditor.jsx";
 import ConfirmDialog from "./ConfirmDialog.jsx";
 import GarmentArt from "../components/GarmentArt.jsx";
 import { IconPlus, IconSearch } from "../components/Icons.jsx";
-import { money, uid } from "../utils/helpers.js";
+import { api } from "../api.js";
+import { money } from "../utils/helpers.js";
 import { CATEGORIES, sanitizeProducts } from "../utils/validate.js";
-import { PUBLISHED_CATALOG } from "../data/catalog.js";
-import { downloadFile } from "./adminUtils.js";
+import { downloadFile, today } from "./adminUtils.js";
 
 const MAX_IMPORT_BYTES = 1_000_000;
 
-export default function ProductsTab({ products, hasDraft, setDraft }) {
+export default function ProductsTab({ products, setProducts, guard, refresh }) {
   const [query, setQuery] = useState("");
   const [cat, setCat] = useState("All");
   const [editing, setEditing] = useState(null); // product | "new"
@@ -23,61 +23,82 @@ export default function ProductsTab({ products, hasDraft, setDraft }) {
     return products.filter((p) => (cat === "All" || p.category === cat) && (!q || `${p.name} ${p.id}`.toLowerCase().includes(q)));
   }, [products, query, cat]);
 
-  function save(product) {
-    const exists = products.some((p) => p.id === product.id);
-    setDraft(exists ? products.map((p) => (p.id === product.id ? product : p)) : [...products, product]);
+  const fail = (e) => {
+    if (e.status !== 401) setMessage({ tone: "err", text: e.message });
+  };
+
+  // Called by the editor. Throws ApiError so the editor can show field errors.
+  async function save(fields, id) {
+    const product = id ? await guard(api.admin.updateProduct(id, fields)) : await guard(api.admin.createProduct(fields));
+    setProducts((prev) => (id ? prev.map((p) => (p.id === id ? product : p)) : [...prev, product]));
     setEditing(null);
-    setMessage({ tone: "ok", text: `Saved “${product.name}”. Remember to publish your changes.` });
+    setMessage({ tone: "ok", text: `Saved “${product.name}” — it's live on the store now.` });
   }
 
-  function duplicate(p) {
-    setDraft([...products, { ...p, id: uid("P", 6), name: `${p.name} (copy)`.slice(0, 80) }]);
-    setMessage({ tone: "ok", text: `Duplicated “${p.name}”.` });
+  async function duplicate(p) {
+    try {
+      const { id, ...fields } = p;
+      const copy = await guard(api.admin.createProduct({ ...fields, name: `${p.name} (copy)`.slice(0, 80) }));
+      setProducts((prev) => [...prev, copy]);
+      setMessage({ tone: "ok", text: `Duplicated “${p.name}”.` });
+    } catch (e) {
+      fail(e);
+    }
   }
 
   function askDelete(p) {
     setConfirm({
       title: `Delete “${p.name}”?`,
-      message: "It will disappear from the store once you publish. Existing orders keep their copy of the item.",
+      message: "It disappears from the store immediately. Existing orders keep their copy of the item.",
       confirmLabel: "Delete product",
       danger: true,
-      onConfirm: () => {
-        setDraft(products.filter((x) => x.id !== p.id));
+      onConfirm: async () => {
         setConfirm(null);
+        try {
+          await guard(api.admin.deleteProduct(p.id));
+          setProducts((prev) => prev.filter((x) => x.id !== p.id));
+        } catch (e) {
+          fail(e);
+        }
       },
     });
   }
 
   function exportJSON() {
-    downloadFile("products.json", JSON.stringify(products, null, 2) + "\n", "application/json");
+    downloadFile(`frost-products-${today()}.json`, JSON.stringify(products, null, 2) + "\n", "application/json");
   }
 
   async function importJSON(e) {
     const file = e.target.files?.[0];
     e.target.value = "";
     if (!file) return;
-    if (file.size > MAX_IMPORT_BYTES) {
-      setMessage({ tone: "err", text: "That file is too large (max 1 MB)." });
-      return;
-    }
+    if (file.size > MAX_IMPORT_BYTES) return setMessage({ tone: "err", text: "That file is too large (max 1 MB)." });
+    let clean;
     try {
-      const raw = JSON.parse(await file.text());
-      const clean = sanitizeProducts(raw);
-      if (!clean.length) throw new Error("no valid products");
-      const skipped = Array.isArray(raw) ? raw.length - clean.length : 0;
-      setConfirm({
-        title: `Replace catalog with ${clean.length} products?`,
-        message: skipped > 0 ? `${skipped} invalid entries will be skipped.` : "Your current product list will be replaced.",
-        confirmLabel: "Import",
-        onConfirm: () => {
-          setDraft(clean);
-          setConfirm(null);
-          setMessage({ tone: "ok", text: `Imported ${clean.length} products.` });
-        },
-      });
+      clean = sanitizeProducts(JSON.parse(await file.text()));
+      if (!clean.length) throw new Error();
     } catch {
-      setMessage({ tone: "err", text: "Couldn't read that file. Choose a products.json exported from this panel." });
+      return setMessage({ tone: "err", text: "Couldn't read that file. Choose a products JSON exported from this panel." });
     }
+    setConfirm({
+      title: `Add ${clean.length} products from this file?`,
+      message: "They'll be added as new products (your existing products stay).",
+      confirmLabel: "Import",
+      onConfirm: async () => {
+        setConfirm(null);
+        let ok = 0;
+        for (const { id, ...fields } of clean) {
+          try {
+            await guard(api.admin.createProduct(fields));
+            ok++;
+          } catch (err) {
+            if (err.status === 401) return;
+          }
+        }
+        await refresh();
+        setMessage({ tone: "ok", text: `Imported ${ok} of ${clean.length} products.` });
+      },
+    });
   }
 
   return (
@@ -88,6 +109,9 @@ export default function ProductsTab({ products, hasDraft, setDraft }) {
           <h1>Products</h1>
         </div>
         <div className="adm-head-actions">
+          <button className="adm-btn adm-btn-ghost" onClick={exportJSON}>
+            Back up (JSON)
+          </button>
           <button className="adm-btn adm-btn-ghost" onClick={() => fileRef.current?.click()}>
             Import JSON
           </button>
@@ -97,40 +121,6 @@ export default function ProductsTab({ products, hasDraft, setDraft }) {
           </button>
         </div>
       </header>
-
-      {hasDraft && (
-        <div className="adm-banner">
-          <div>
-            <b>You have unpublished changes.</b>
-            <p>
-              They're saved on this device only. To publish for all customers: download <code>products.json</code>, replace{" "}
-              <code>src/data/products.json</code> in your project with it, then redeploy.
-            </p>
-          </div>
-          <div className="adm-banner-actions">
-            <button className="adm-btn adm-btn-primary" onClick={exportJSON}>
-              Download products.json
-            </button>
-            <button
-              className="adm-btn adm-btn-ghost"
-              onClick={() =>
-                setConfirm({
-                  title: "Discard unpublished changes?",
-                  message: `This restores the published catalog (${PUBLISHED_CATALOG.length} products).`,
-                  confirmLabel: "Discard changes",
-                  danger: true,
-                  onConfirm: () => {
-                    setDraft(null);
-                    setConfirm(null);
-                  },
-                })
-              }
-            >
-              Discard
-            </button>
-          </div>
-        </div>
-      )}
 
       {message && (
         <p className={"adm-flash " + (message.tone === "err" ? "is-err" : "")} role="status">
@@ -152,11 +142,6 @@ export default function ProductsTab({ products, hasDraft, setDraft }) {
             <option key={c}>{c}</option>
           ))}
         </select>
-        {!hasDraft && (
-          <button className="adm-btn adm-btn-ghost" onClick={exportJSON}>
-            Export JSON
-          </button>
-        )}
       </div>
 
       <div className="adm-table-wrap">

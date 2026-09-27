@@ -1,4 +1,5 @@
 import { STORE } from "../config.js";
+export { round2, shippingFor, computeTotals } from "../../shared/pricing.js";
 
 const currencyFormat = new Intl.NumberFormat(STORE.currency.locale, {
   style: "currency",
@@ -10,46 +11,11 @@ export function money(n) {
   return currencyFormat.format(Number.isFinite(v) ? v : 0);
 }
 
-export function round2(n) {
-  return Math.round(Number(n) * 100) / 100;
-}
-
-// Unambiguous characters only (no 0/O, 1/I/L) so order numbers are easy to
-// read back over WhatsApp.
-const ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
-
-// Cryptographically random code. Rejection sampling avoids modulo bias,
-// so order numbers can't be guessed or enumerated.
-export function randomCode(length = 8) {
-  const limit = 256 - (256 % ALPHABET.length);
-  let out = "";
-  while (out.length < length) {
-    const bytes = crypto.getRandomValues(new Uint8Array(length * 2));
-    for (const b of bytes) {
-      if (b < limit && out.length < length) out += ALPHABET[b % ALPHABET.length];
-    }
-  }
-  return out;
-}
-
-// uid("FR") -> "FR-7K2Q9MXA"
-export function uid(prefix, length = 8) {
-  return `${prefix}-${randomCode(length)}`;
-}
+export const moneyWhole = (n) =>
+  new Intl.NumberFormat(STORE.currency.locale, { style: "currency", currency: STORE.currency.code, maximumFractionDigits: 0 }).format(n);
 
 export function cartKey(id, size, color) {
   return [id, size || "", color || ""].join("|");
-}
-
-export function shippingFor(subtotal, itemCount) {
-  if (itemCount === 0) return 0;
-  return subtotal >= STORE.freeShippingThreshold ? 0 : STORE.shippingFlat;
-}
-
-export function computeTotals(lines) {
-  const subtotal = round2(lines.reduce((s, l) => s + l.price * l.qty, 0));
-  const shipping = round2(shippingFor(subtotal, lines.length));
-  return { subtotal, shipping, total: round2(subtotal + shipping) };
 }
 
 export function formatDate(iso) {

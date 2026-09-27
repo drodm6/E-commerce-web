@@ -1,11 +1,13 @@
 import { useMemo, useState } from "react";
 import ConfirmDialog from "./ConfirmDialog.jsx";
 import { money } from "../utils/helpers.js";
+import { api } from "../api.js";
 import { STORE } from "../config.js";
 import { toCSV, downloadFile, today } from "./adminUtils.js";
 
-export default function BatchTab({ orders, setOrders }) {
+export default function BatchTab({ orders, guard, refresh }) {
   const [confirm, setConfirm] = useState(null);
+  const [busy, setBusy] = useState(false);
 
   const confirmed = orders.filter((o) => o.status === "confirmed");
   const ordered = orders.filter((o) => o.status === "ordered");
@@ -36,9 +38,19 @@ export default function BatchTab({ orders, setOrders }) {
       title: `${label}?`,
       message: `${n} order${n === 1 ? "" : "s"} will be updated.`,
       confirmLabel: label,
-      onConfirm: () => {
-        setOrders(orders.map((o) => (o.status === from ? { ...o, status: to } : o)));
+      onConfirm: async () => {
         setConfirm(null);
+        setBusy(true);
+        try {
+          for (const o of orders.filter((x) => x.status === from)) {
+            await guard(api.admin.updateOrder(o.orderNumber, { status: to }));
+          }
+        } catch (e) {
+          if (e.status !== 401) alert(e.message);
+        } finally {
+          setBusy(false);
+          refresh();
+        }
       },
     });
   }
@@ -70,7 +82,7 @@ export default function BatchTab({ orders, setOrders }) {
           <p className="adm-muted">
             {confirmed.length >= STORE.batchTarget
               ? "You've reached your target. Place the combined supplier order, then mark these orders as ordered."
-              : `Collect ${STORE.batchTarget - confirmed.length} more confirmed orders to reach your target. You can change the target in src/config.js.`}
+              : `Collect ${STORE.batchTarget - confirmed.length} more confirmed orders to reach your target. You can change the target in shared/store.js.`}
           </p>
           <dl className="adm-batch-facts">
             <div>
@@ -96,7 +108,7 @@ export default function BatchTab({ orders, setOrders }) {
             <button className="adm-btn adm-btn-ghost adm-btn-sm" onClick={exportList} disabled={!supplierList.length}>
               Export CSV
             </button>
-            <button className="adm-btn adm-btn-primary adm-btn-sm" onClick={() => move("confirmed", "ordered", "Mark as ordered from supplier")} disabled={!confirmed.length}>
+            <button className="adm-btn adm-btn-primary adm-btn-sm" onClick={() => move("confirmed", "ordered", "Mark as ordered from supplier")} disabled={!confirmed.length || busy}>
               Mark {confirmed.length} as ordered
             </button>
           </div>
@@ -142,14 +154,14 @@ export default function BatchTab({ orders, setOrders }) {
           <div>
             <b>{ordered.length}</b>
             <span>Ordered from supplier</span>
-            <button className="adm-btn adm-btn-sm adm-btn-ghost" disabled={!ordered.length} onClick={() => move("ordered", "shipping", "Mark as shipping by sea")}>
+            <button className="adm-btn adm-btn-sm adm-btn-ghost" disabled={!ordered.length || busy} onClick={() => move("ordered", "shipping", "Mark as shipping by sea")}>
               Shipped by sea →
             </button>
           </div>
           <div>
             <b>{shipping.length}</b>
             <span>Shipping by sea</span>
-            <button className="adm-btn adm-btn-sm adm-btn-ghost" disabled={!shipping.length} onClick={() => move("shipping", "arrived", "Mark as arrived")}>
+            <button className="adm-btn adm-btn-sm adm-btn-ghost" disabled={!shipping.length || busy} onClick={() => move("shipping", "arrived", "Mark as arrived")}>
               Arrived →
             </button>
           </div>
@@ -158,7 +170,7 @@ export default function BatchTab({ orders, setOrders }) {
             <span>Arrived — ready to deliver</span>
             <button
               className="adm-btn adm-btn-sm adm-btn-ghost"
-              disabled={!orders.some((o) => o.status === "arrived")}
+              disabled={!orders.some((o) => o.status === "arrived") || busy}
               onClick={() => move("arrived", "delivered", "Mark as delivered")}
             >
               Delivered ✓

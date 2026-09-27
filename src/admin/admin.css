@@ -1347,3 +1347,286 @@
     padding: 16px;
   }
 }
+
+/* ── Sign-in: 2FA code ───────────────────── */
+.adm-field .adm-otp {
+  font-size: 22px;
+  letter-spacing: 0.3em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Receipt check ───────────────────────── */
+.adm-lookup-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.adm-lookup-row input {
+  flex: 1;
+  min-width: 200px;
+  height: 46px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid var(--a-line-strong);
+  background: var(--a-bg);
+  color: var(--a-text);
+  font-size: 18px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+.adm-lookup-row input:focus {
+  outline: none;
+  border-color: var(--a-accent);
+  box-shadow: 0 0 0 3px rgba(196, 154, 108, 0.2);
+}
+.adm-lookup {
+  border-color: rgba(196, 154, 108, 0.35);
+  background: linear-gradient(135deg, rgba(196, 154, 108, 0.1), var(--a-panel) 60%);
+}
+
+/* ── Orders table ────────────────────────── */
+.adm-orders-table td {
+  vertical-align: top;
+}
+.adm-order-link {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--a-accent);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.adm-order-link:hover {
+  text-decoration: underline;
+}
+.adm-block {
+  display: block;
+}
+.adm-clip {
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.adm-items-cell {
+  font-size: 13px;
+  min-width: 200px;
+}
+.adm-orders-table .adm-row-actions {
+  margin-top: 8px;
+}
+
+/* ── Order detail sheet ──────────────────── */
+.adm-order-sheet {
+  width: min(900px, 100vw);
+}
+.adm-order-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  font-variant-numeric: tabular-nums;
+}
+.adm-sheet-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px 32px;
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
+.adm-card-flat {
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: var(--a-raised);
+  border: 1px solid var(--a-line);
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  min-width: 0;
+}
+.adm-card-flat h3,
+.adm-verify h3 {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--a-accent);
+}
+.adm-card-flat h3 .adm-muted {
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 400;
+}
+.adm-verify {
+  padding: 18px;
+  border-radius: 14px;
+  border: 1px dashed rgba(196, 154, 108, 0.55);
+  background: rgba(196, 154, 108, 0.08);
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+}
+.adm-verify dl {
+  width: 100%;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.adm-verify dt,
+.adm-kv dt,
+.adm-sum dt {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--a-muted);
+}
+.adm-verify dd {
+  margin: 2px 0 0;
+  font-size: 17px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.adm-verify-total {
+  color: var(--a-accent);
+}
+.adm-kv {
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+.adm-kv div {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 10px;
+  align-items: baseline;
+}
+.adm-kv dd {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  word-break: break-word;
+}
+.adm-kv a {
+  color: var(--a-text);
+}
+.adm-icon-sm {
+  width: 28px;
+  height: 28px;
+}
+.adm-timeline {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0 0 0 14px;
+  border-left: 2px solid var(--a-line-strong);
+  display: grid;
+  gap: 10px;
+}
+.adm-timeline li {
+  position: relative;
+  display: grid;
+}
+.adm-timeline li::before {
+  content: "";
+  position: absolute;
+  left: -20px;
+  top: 6px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--a-panel);
+  border: 2px solid var(--a-accent);
+}
+.adm-timeline small {
+  color: var(--a-muted);
+  font-size: 12px;
+}
+.adm-swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  vertical-align: -2px;
+  box-shadow: 0 0 0 1px var(--a-line-strong);
+}
+.adm-sum {
+  margin: 0;
+  display: grid;
+  gap: 6px;
+  justify-self: end;
+  min-width: 260px;
+}
+.adm-sum div {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+.adm-sum dd {
+  margin: 0;
+}
+.adm-sum-total {
+  padding-top: 8px;
+  border-top: 1px dashed var(--a-line-strong);
+}
+.adm-sum-total dd {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--a-accent);
+}
+.adm-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--a-line-strong);
+  background: var(--a-bg);
+  color: var(--a-text);
+  font-size: 15px;
+  resize: vertical;
+}
+.adm-textarea:focus {
+  outline: none;
+  border-color: var(--a-accent);
+}
+.adm-card-flat .adm-btn {
+  justify-self: start;
+}
+.adm-card-flat .adm-mini-list li {
+  background: var(--a-panel);
+  flex-wrap: wrap;
+}
+.adm-audit li.is-warn b {
+  color: var(--a-danger);
+}
+.adm-foot-error {
+  margin-right: auto;
+}
+
+@media (max-width: 700px) {
+  .adm-verify dl {
+    grid-template-columns: 1fr 1fr;
+  }
+  .adm-sheet-body {
+    padding: 16px;
+  }
+  .adm-sum {
+    justify-self: stretch;
+    min-width: 0;
+  }
+  .adm-kv div {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}

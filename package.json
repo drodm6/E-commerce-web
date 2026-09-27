@@ -4,21 +4,30 @@
   "version": "2.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "node scripts/dev.mjs",
+    "dev:web": "vite",
+    "server": "node server/index.js",
     "build": "vite build",
-    "preview": "vite preview",
-    "set-admin-password": "node scripts/set-admin-password.mjs",
-    "audit": "npm audit --omit=dev",
-    "test": "node tests/security.test.mjs"
+    "start": "node server/index.js",
+    "setup-admin": "node server/scripts/setup-admin.js",
+    "test": "node --test tests/*.test.mjs",
+    "audit": "npm audit --omit=dev"
   },
   "dependencies": {
     "@fontsource/cormorant-garamond": "^5.3.0",
     "@fontsource/jost": "^5.3.0",
+    "better-sqlite3": "^13.0.3",
+    "cookie-parser": "^1.4.7",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.0",
+    "helmet": "^8.3.0",
+    "jsonwebtoken": "^9.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^6.1.1",
+    "qrcode": "^1.5.4",
     "vite": "^8.3.1"
   },
   "engines": {

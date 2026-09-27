@@ -2,7 +2,7 @@ import { useRef, useState, useId } from "react";
 import { IconSnow, IconCamera, IconWhatsApp, IconCopy, IconCheck, IconClose } from "./Icons.jsx";
 import { useDialog, useExitAnimation } from "../hooks/useDialog.js";
 import { money, formatDate, whatsappLink, isValidWhatsAppNumber } from "../utils/helpers.js";
-import { encodeOrder } from "../utils/orderCode.js";
+import { ORDER_STATUSES } from "../utils/validate.js";
 import { STORE } from "../config.js";
 import "./ReceiptModal.css";
 
@@ -18,8 +18,7 @@ function buildMessage(order) {
     `Order: #${order.orderNumber}`,
     `Name: ${c.name}`,
     `Phone: ${c.phone}`,
-    `City: ${c.city}`,
-    `Address: ${c.address}`,
+    `Address: ${c.address}, ${c.city}, ${c.governorate}`,
     c.notes ? `Note: ${c.notes}` : null,
     ``,
     ...lines,
@@ -27,8 +26,6 @@ function buildMessage(order) {
     `Total (cash on delivery): ${money(order.total)}`,
     ``,
     `📸 My receipt screenshot is attached.`,
-    ``,
-    `Order code (please don't edit): ${encodeOrder(order)}`,
   ]
     .filter((l) => l !== null)
     .join("\n");
@@ -96,7 +93,9 @@ export default function ReceiptModal({ order, onClose }) {
             </div>
             <div>
               <dt>Status</dt>
-              <dd className="rc-status">Awaiting WhatsApp confirmation</dd>
+              <dd className="rc-status">
+                {order.status === "new" ? "Awaiting WhatsApp confirmation" : ORDER_STATUSES.find((s) => s.id === order.status)?.label}
+              </dd>
             </div>
             <div>
               <dt>Payment</dt>
@@ -113,7 +112,7 @@ export default function ReceiptModal({ order, onClose }) {
             <p>
               <b>{c.name}</b> · {c.phone}
               <br />
-              {c.address}, {c.city}
+              {c.address}, {c.city}, {c.governorate}
               {c.notes && (
                 <>
                   <br />
@@ -148,7 +147,7 @@ export default function ReceiptModal({ order, onClose }) {
             </div>
             <div>
               <dt>Delivery</dt>
-              <dd>{order.shipping === 0 ? "Free" : money(order.shipping)}</dd>
+              <dd>{order.shipping === 0 ? "Free — to your door" : money(order.shipping)}</dd>
             </div>
             <div className="rc-grand">
               <dt>Pay on delivery</dt>

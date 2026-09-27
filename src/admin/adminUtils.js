@@ -28,10 +28,11 @@ export function today() {
   return new Date().toISOString().slice(0, 10);
 }
 
-// wa.me link to a customer, only if their number looks like a real
-// international number (digits only after cleaning).
+// wa.me link to a customer. Local Iraqi mobile numbers (07xx xxx xxxx)
+// are converted to international format (9647xx…).
 export function customerWhatsApp(phone, text = "") {
-  const digits = String(phone || "").replace(/\D/g, "").replace(/^00/, "");
+  let digits = String(phone || "").replace(/\D/g, "").replace(/^00/, "");
+  if (/^07\d{9}$/.test(digits)) digits = "964" + digits.slice(1);
   if (!/^[1-9]\d{7,14}$/.test(digits)) return "";
   return `https://wa.me/${digits}${text ? `?text=${encodeURIComponent(text)}` : ""}`;
 }

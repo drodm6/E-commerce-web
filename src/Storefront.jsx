@@ -10,13 +10,19 @@ import ReceiptModal from "./components/ReceiptModal.jsx";
 import MyOrdersModal from "./components/MyOrdersModal.jsx";
 import Footer from "./components/Footer.jsx";
 import Toast from "./components/Toast.jsx";
+import DeliveryBar from "./components/DeliveryBar.jsx";
+import { api } from "./api.js";
 import { loadCartRaw, saveCart, loadMyOrders, saveMyOrders } from "./utils/storage.js";
 import { sanitizeCart, LIMITS } from "./utils/validate.js";
-import { uid, cartKey, computeTotals } from "./utils/helpers.js";
+import { cartKey } from "./utils/helpers.js";
 import "./App.css";
 
-export default function Storefront({ products, isDraft }) {
-  const [cart, setCart] = useState(() => sanitizeCart(loadCartRaw(), products));
+const EMPTY = [];
+
+export default function Storefront({ products: loaded, loadError, onRetry }) {
+  const products = loaded ?? EMPTY;
+  const loading = loaded === null && !loadError;
+  const [cart, setCart] = useState(loadCartRaw);
   const [myOrders, setMyOrders] = useState(loadMyOrders);
   const [cartOpen, setCartOpen] = useState(false);
   const [ordersOpen, setOrdersOpen] = useState(false);
@@ -28,14 +34,14 @@ export default function Storefront({ products, isDraft }) {
   const [search, setSearch] = useState("");
   const searchRef = useRef(null);
 
+  // Once the catalog has loaded (or changed), drop stale/invalid bag lines.
   useEffect(() => {
-    saveCart(cart);
-  }, [cart]);
+    if (loaded) setCart((prev) => sanitizeCart(prev, loaded));
+  }, [loaded]);
 
-  // If the catalog changes (e.g. a product was removed), drop stale cart lines.
   useEffect(() => {
-    setCart((prev) => sanitizeCart(prev, products));
-  }, [products]);
+    if (loaded) saveCart(cart);
+  }, [cart, loaded]);
 
   const lines = useMemo(() => {
     const byId = new Map(products.map((p) => [p.id, p]));
@@ -79,22 +85,40 @@ export default function Storefront({ products, isDraft }) {
     setCart((prev) => prev.filter((c) => cartKey(c.id, c.size, c.color) !== key));
   }
 
-  function placeOrder(customer) {
-    const items = lines.map((l) => ({ id: l.id, name: l.name, size: l.size, color: l.color, qty: l.qty, price: l.price }));
-    const order = {
-      orderNumber: uid("FR"),
-      createdAt: new Date().toISOString(),
-      customer,
-      items,
-      ...computeTotals(items),
-      status: "new",
-    };
-    const next = [...myOrders, order];
-    setMyOrders(next);
-    saveMyOrders(next);
+  // Sends the order to the server, which checks stock and sets the prices.
+  // Throws ApiError (with field errors) so the checkout form can show them.
+  async function placeOrder(customer, honeypot) {
+    const items = lines.map((l) => ({ id: l.id, size: l.size, color: l.color, qty: l.qty }));
+    const { order, accessToken } = await api.placeOrder({ customer, items, website: honeypot });
+    const saved = { ...order, accessToken };
+    setMyOrders((prev) => {
+      const next = [...prev, saved];
+      saveMyOrders(next);
+      return next;
+    });
     setCart([]);
     setCartOpen(false);
-    setReceipt(order);
+    setReceipt(saved);
+    onRetry(); // refresh stock
+  }
+
+  // Re-open a receipt with its latest status from the server.
+  async function openReceipt(o) {
+    setOrdersOpen(false);
+    setReceipt(o);
+    if (!o.accessToken) return;
+    try {
+      const fresh = await api.myOrder(o.orderNumber, o.accessToken);
+      const merged = { ...fresh, accessToken: o.accessToken };
+      setReceipt((cur) => (cur?.orderNumber === o.orderNumber ? merged : cur));
+      setMyOrders((prev) => {
+        const next = prev.map((x) => (x.orderNumber === o.orderNumber ? merged : x));
+        saveMyOrders(next);
+        return next;
+      });
+    } catch {
+      /* offline — show the saved copy */
+    }
   }
 
   const categories = useMemo(() => ["All", ...new Set(products.map((p) => p.category))], [products]);
@@ -125,6 +149,8 @@ export default function Storefront({ products, isDraft }) {
         Skip to products
       </a>
 
+      <DeliveryBar />
+
       <Header
         cartCount={cartCount}
         onCartOpen={() => setCartOpen(true)}
@@ -133,15 +159,8 @@ export default function Storefront({ products, isDraft }) {
         onOrdersOpen={() => setOrdersOpen(true)}
       />
 
-      {isDraft && (
-        <div className="draft-banner" role="status">
-          Preview: you're seeing unpublished catalog changes saved on this device from the admin panel.
-        </div>
-      )}
-
       <main>
         <Hero products={products} />
-        <HowItWorks />
 
         <section id="shop" className="shop" aria-labelledby="shop-title">
           <div className="section-head">
@@ -164,6 +183,9 @@ export default function Storefront({ products, isDraft }) {
 
           <ProductGrid
             products={visible}
+            loading={loading}
+            error={loadError}
+            onRetry={onRetry}
             search={search}
             onOpen={(product, rect) => setActive({ product, rect })}
             onReset={() => {
@@ -172,6 +194,8 @@ export default function Storefront({ products, isDraft }) {
             }}
           />
         </section>
+
+        <HowItWorks />
       </main>
 
       <Footer />
@@ -200,10 +224,7 @@ export default function Storefront({ products, isDraft }) {
         <MyOrdersModal
           orders={myOrders}
           onClose={() => setOrdersOpen(false)}
-          onOpenReceipt={(o) => {
-            setOrdersOpen(false);
-            setReceipt(o);
-          }}
+          onOpenReceipt={openReceipt}
         />
       )}
 

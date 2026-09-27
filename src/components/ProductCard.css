@@ -41,9 +41,7 @@
   margin: 8px 8px 0;
   border-radius: 18px;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.7), transparent 65%),
-    linear-gradient(180deg, var(--cream) 0%, var(--linen) 100%);
+  background: radial-gradient(circle at 50% 38%, #ffffff 0%, var(--cream) 70%);
 }
 .p-media .garment-art {
   width: 74%;
@@ -105,7 +103,7 @@
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--caramel);
+  color: var(--accent-text);
 }
 .p-name {
   font-family: var(--font-display);

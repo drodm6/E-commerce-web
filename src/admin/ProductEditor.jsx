@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { useDialog } from "../hooks/useDialog.js";
 import GarmentArt, { ProductVisual } from "../components/GarmentArt.jsx";
 import { IconClose, IconPlus, IconTrash } from "../components/Icons.jsx";
-import { money, uid } from "../utils/helpers.js";
+import { money } from "../utils/helpers.js";
 import { CATEGORIES, ART_TYPES, DEFAULT_ART, LIMITS, sanitizeProduct, safeImageUrl, toNumber, cleanText } from "../utils/validate.js";
 
 const SIZE_PRESETS = {
@@ -62,7 +62,7 @@ export default function ProductEditor({ product, onSave, onClose }) {
 
   function build() {
     return {
-      id: product?.id || uid("P", 6),
+      id: product?.id || "P-NEW",
       name: form.name,
       category: form.category,
       art: form.art,
@@ -96,10 +96,15 @@ export default function ProductEditor({ product, onSave, onClose }) {
     return e;
   }
 
-  function submit(ev) {
+  const [saving, setSaving] = useState(false);
+  const [serverError, setServerError] = useState("");
+
+  async function submit(ev) {
     ev.preventDefault();
+    if (saving) return;
     const e = validate();
     setErrors(e);
+    setServerError("");
     if (Object.keys(e).length) {
       ref.current?.querySelector(".has-error input, .has-error textarea")?.focus();
       return;
@@ -109,7 +114,15 @@ export default function ProductEditor({ product, onSave, onClose }) {
       setErrors({ name: "Some values are invalid — please check the form." });
       return;
     }
-    onSave(clean);
+    const { id, ...fields } = clean;
+    setSaving(true);
+    try {
+      await onSave(fields, product?.id); // the server validates again and assigns the ID
+    } catch (err) {
+      setServerError(err.message);
+      if (err.fields) setErrors(err.fields);
+      setSaving(false);
+    }
   }
 
   const preview = sanitizeProduct({ ...build(), name: form.name || "Product name", price: toNumber(form.price, { min: 0, max: LIMITS.maxPrice }) ?? 0 });
@@ -236,7 +249,7 @@ export default function ProductEditor({ product, onSave, onClose }) {
               {Field({
                 k: "images",
                 label: "Photo links",
-                hint: "One per line. Use https:// links, or put photos in the public/products folder and write /products/name.jpg",
+                hint: "One per line. Use https:// links, or or put photos in the public/products folder and write /products/name.jpg",
                 children: <textarea rows={3} value={form.images} onChange={set("images")} maxLength={3000} spellCheck={false} />,
               })}
               {badImages.length > 0 && <p className="adm-field-error">Not allowed: {badImages.slice(0, 3).join(", ")}</p>}
@@ -277,8 +290,9 @@ export default function ProductEditor({ product, onSave, onClose }) {
           <button type="button" className="adm-btn adm-btn-ghost" onClick={onClose}>
             Cancel
           </button>
-          <button type="submit" className="adm-btn adm-btn-primary">
-            {product ? "Save changes" : "Add product"}
+          {serverError && <span className="adm-error adm-foot-error">{serverError}</span>}
+          <button type="submit" className="adm-btn adm-btn-primary" disabled={saving}>
+            {saving ? "Saving…" : product ? "Save changes" : "Add product"}
           </button>
         </footer>
       </form>

@@ -1,17 +1,19 @@
 import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import Storefront from "./Storefront.jsx";
-import { PUBLISHED_CATALOG } from "./data/catalog.js";
-import { loadCatalogDraft, saveCatalogDraft, clearCatalogDraft } from "./utils/storage.js";
+import { api } from "./api.js";
+import { ADMIN } from "./config.js";
 
-// The admin panel is code-split: its code is only downloaded when someone
-// visits #admin, so it isn't part of the normal storefront bundle.
+// The admin panel is code-split: its code only downloads when someone opens
+// the secret address (#dabo). Real protection is on the server — every admin
+// API call requires a signed-in session with password + 2FA.
 const AdminPanel = lazy(() => import("./admin/AdminPanel.jsx"));
 
-const routeFromHash = () => (window.location.hash === "#admin" ? "admin" : "shop");
+const routeFromHash = () => (window.location.hash === ADMIN.route ? "admin" : "shop");
 
 export default function App() {
   const [route, setRoute] = useState(routeFromHash);
-  const [draft, setDraftState] = useState(() => loadCatalogDraft());
+  const [products, setProducts] = useState(null);
+  const [loadError, setLoadError] = useState("");
 
   useEffect(() => {
     const onHash = () => setRoute(routeFromHash());
@@ -20,28 +22,28 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    document.title = route === "admin" ? "Frost · Admin" : "Frost — Winter Wear, Layered Right";
+    document.title = route === "admin" ? "Frost · Dashboard" : "Frost — Winter Wear, Layered Right";
   }, [route]);
 
-  const setDraft = useCallback((next) => {
-    if (next === null) {
-      clearCatalogDraft();
-      setDraftState(null);
-    } else {
-      saveCatalogDraft(next);
-      setDraftState(next);
-    }
+  const loadProducts = useCallback(() => {
+    setLoadError("");
+    api
+      .products()
+      .then(setProducts)
+      .catch((e) => setLoadError(e.message));
   }, []);
 
-  const products = draft ?? PUBLISHED_CATALOG;
+  useEffect(() => {
+    if (route === "shop") loadProducts();
+  }, [route, loadProducts]);
 
   if (route === "admin") {
     return (
       <Suspense fallback={<div className="admin-loading">Loading…</div>}>
-        <AdminPanel products={products} hasDraft={draft !== null} setDraft={setDraft} />
+        <AdminPanel />
       </Suspense>
     );
   }
 
-  return <Storefront products={products} isDraft={draft !== null} />;
+  return <Storefront products={products} loadError={loadError} onRetry={loadProducts} />;
 }

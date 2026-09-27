@@ -1,6 +1,6 @@
 import { IconSnow, IconInstagram, IconWhatsApp } from "./Icons.jsx";
 import { STORE } from "../config.js";
-import { instagramLink, isValidWhatsAppNumber, whatsappLink } from "../utils/helpers.js";
+import { instagramLink, isValidWhatsAppNumber, whatsappLink, moneyWhole } from "../utils/helpers.js";
 
 export default function Footer() {
   const ig = instagramLink();
@@ -27,7 +27,8 @@ export default function Footer() {
           <ul>
             <li>Pre-order · {STORE.deliveryEstimate}</li>
             <li>Cash on delivery</li>
-            <li>Free delivery over {new Intl.NumberFormat(STORE.currency.locale, { style: "currency", currency: STORE.currency.code, maximumFractionDigits: 0 }).format(STORE.freeShippingThreshold)}</li>
+            <li>Free delivery to your door over {moneyWhole(STORE.freeShippingThreshold)}</li>
+            <li>Delivering to all Iraq &amp; Kurdistan</li>
           </ul>
         </div>
 

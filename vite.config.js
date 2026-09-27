@@ -45,9 +45,12 @@ export default defineConfig({
     port: 5173,
     open: true,
     headers: securityHeaders,
+    // Send /api calls to the Express server during development.
+    proxy: { "/api": { target: "http://localhost:4000", changeOrigin: false } },
   },
   preview: {
     open: false,
+    proxy: { "/api": { target: "http://localhost:4000", changeOrigin: false } },
     headers: { ...securityHeaders, "Content-Security-Policy": CSP + "; frame-ancestors 'none'" },
   },
   build: {

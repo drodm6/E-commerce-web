@@ -2,12 +2,12 @@ import { useRef, useState, useId } from "react";
 import { ProductVisual } from "./GarmentArt.jsx";
 import { IconClose, IconMinus, IconPlus, IconTrash, IconShip, IconArrowRight, IconBag } from "./Icons.jsx";
 import { useDialog, useExitAnimation } from "../hooks/useDialog.js";
-import { money, computeTotals } from "../utils/helpers.js";
+import { money, moneyWhole, computeTotals } from "../utils/helpers.js";
 import { validateCustomer, CUSTOMER_FIELDS, LIMITS } from "../utils/validate.js";
-import { STORE } from "../config.js";
+import { STORE, GOVERNORATES } from "../config.js";
 import "./CartDrawer.css";
 
-const EMPTY_CUSTOMER = { name: "", phone: "", city: "", address: "", notes: "" };
+const EMPTY_CUSTOMER = { name: "", phone: "", governorate: "", city: "", address: "", notes: "" };
 
 export default function CartDrawer({ lines, onClose, onQtyChange, onRemove, onPlaceOrder }) {
   const ref = useRef(null);
@@ -18,6 +18,9 @@ export default function CartDrawer({ lines, onClose, onQtyChange, onRemove, onPl
   const [errors, setErrors] = useState({});
   const [agreed, setAgreed] = useState(false);
   const [agreeError, setAgreeError] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [serverError, setServerError] = useState("");
+  const [honeypot, setHoneypot] = useState("");
   useDialog(ref, requestClose);
 
   const { subtotal, shipping, total } = computeTotals(lines);
@@ -25,17 +28,28 @@ export default function CartDrawer({ lines, onClose, onQtyChange, onRemove, onPl
   const toFree = Math.max(0, STORE.freeShippingThreshold - subtotal);
   const freePct = Math.min(100, (subtotal / STORE.freeShippingThreshold) * 100);
 
-  function submit(e) {
+  const focusFirstError = () =>
+    setTimeout(() => ref.current?.querySelector("[aria-invalid='true'], .agree.has-error")?.focus?.(), 0);
+
+  async function submit(e) {
     e.preventDefault();
+    if (submitting) return;
     const result = validateCustomer(customer);
     setErrors(result.errors);
     setAgreeError(!agreed);
-    if (!result.ok || !agreed || lines.length === 0) {
-      const first = ref.current?.querySelector("[aria-invalid='true'], .agree.has-error");
-      first?.focus?.();
-      return;
+    setServerError("");
+    if (!result.ok || !agreed || lines.length === 0) return focusFirstError();
+    setSubmitting(true);
+    try {
+      await onPlaceOrder(result.value, honeypot);
+    } catch (err) {
+      setServerError(err.message);
+      if (err.fields) {
+        setErrors(err.fields);
+        focusFirstError();
+      }
+      setSubmitting(false);
     }
-    onPlaceOrder(result.value);
   }
 
   const field = (key, label, props = {}) => (
@@ -52,6 +66,7 @@ export default function CartDrawer({ lines, onClose, onQtyChange, onRemove, onPl
           if (errors[key]) setErrors({ ...errors, [key]: undefined });
         }}
         aria-invalid={errors[key] ? "true" : "false"}
+        disabled={submitting}
         {...props}
       />
       {errors[key] && <span className="field-error">{errors[key]}</span>}
@@ -98,10 +113,10 @@ export default function CartDrawer({ lines, onClose, onQtyChange, onRemove, onPl
                     <p>
                       {toFree > 0 ? (
                         <>
-                          Add <b>{money(toFree)}</b> more for free delivery
+                          Add <b>{money(toFree)}</b> more for <b>free delivery</b> to your door
                         </>
                       ) : (
-                        <b>You've unlocked free delivery ✓</b>
+                        <b>You've unlocked free delivery to your address ✓</b>
                       )}
                     </p>
                     <div className="free-bar">
@@ -145,8 +160,8 @@ export default function CartDrawer({ lines, onClose, onQtyChange, onRemove, onPl
                   <div className="preorder-note">
                     <IconShip size={20} />
                     <p>
-                      <b>Pre-order:</b> we collect orders and ship them together by sea to keep prices low. Expected delivery in about{" "}
-                      {STORE.deliveryEstimate}. You pay in cash when it arrives.
+                      <b>Pre-order:</b> we collect orders and ship them together by sea to keep prices low. Delivered to {STORE.deliveryArea}{" "}
+                      in about {STORE.deliveryEstimate}. Free delivery on orders over {moneyWhole(STORE.freeShippingThreshold)}. You pay in cash when it arrives.
                     </p>
                   </div>
                 </>
@@ -170,9 +185,41 @@ export default function CartDrawer({ lines, onClose, onQtyChange, onRemove, onPl
               <p className="form-intro">We'll use these details to deliver your order and to match your WhatsApp message.</p>
               {field("name", "Full name", { autoComplete: "name", required: true })}
               {field("phone", "Phone / WhatsApp number", { autoComplete: "tel", inputMode: "tel", type: "tel", required: true })}
-              {field("city", "City", { autoComplete: "address-level2", required: true })}
+              <label className={"field" + (errors.governorate ? " has-error" : "")}>
+                <span className="field-label">Governorate</span>
+                <select
+                  value={customer.governorate}
+                  onChange={(e) => {
+                    setCustomer({ ...customer, governorate: e.target.value });
+                    if (errors.governorate) setErrors({ ...errors, governorate: undefined });
+                  }}
+                  aria-invalid={errors.governorate ? "true" : "false"}
+                  disabled={submitting}
+                  required
+                >
+                  <option value="">Choose your governorate…</option>
+                  <optgroup label="Kurdistan Region">
+                    {GOVERNORATES.slice(0, 4).map((g) => (
+                      <option key={g}>{g}</option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="Iraq">
+                    {GOVERNORATES.slice(4).map((g) => (
+                      <option key={g}>{g}</option>
+                    ))}
+                  </optgroup>
+                </select>
+                {errors.governorate && <span className="field-error">{errors.governorate}</span>}
+              </label>
+              {field("city", "City / area", { autoComplete: "address-level2", required: true })}
               {field("address", "Address or nearest landmark", { autoComplete: "street-address", required: true })}
               {field("notes", "Note for us", { placeholder: "e.g. best time to call" })}
+
+              {/* Honeypot: invisible to people, bots fill it in and get rejected. */}
+              <label className="hp" aria-hidden="true">
+                Website
+                <input tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+              </label>
 
               <label className={"agree" + (agreeError ? " has-error" : "")} tabIndex={-1}>
                 <input
@@ -189,12 +236,17 @@ export default function CartDrawer({ lines, onClose, onQtyChange, onRemove, onPl
                 </span>
               </label>
               {agreeError && <p className="field-error">Please tick the box to continue.</p>}
+              {serverError && (
+                <p className="form-error" role="alert">
+                  {serverError}
+                </p>
+              )}
             </div>
 
             <div className="drawer-foot">
               <Totals subtotal={subtotal} shipping={shipping} total={total} />
-              <button type="submit" className="btn btn-dark btn-block">
-                Place order &amp; get receipt
+              <button type="submit" className="btn btn-dark btn-block" disabled={submitting}>
+                {submitting ? "Placing your order…" : "Place order & get receipt"}
               </button>
             </div>
           </form>
