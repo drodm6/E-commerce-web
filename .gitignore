@@ -12,3 +12,6 @@ dist
 /data/
 server/data/
 server/.env
+
+# Local backups (npm run backup)
+backups/

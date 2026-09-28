@@ -1,0 +1,6 @@
+# Caddy web server config for a VPS (Option B in DEPLOY.md).
+# Caddy gets and renews the free HTTPS certificate automatically.
+frostshop.store, www.frostshop.store {
+	encode gzip
+	reverse_proxy 127.0.0.1:4000
+}

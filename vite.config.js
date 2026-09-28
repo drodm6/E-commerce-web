@@ -49,6 +49,12 @@ export default defineConfig({
     // (phone and computer must be on the same Wi-Fi). Vite prints that
     // address as "Network:" when the dev server starts.
     host: true,
+    // Because the dev server is reachable on your Wi-Fi, never let it hand
+    // out the database, uploads, server code, tests or secrets — only the
+    // website's own files (src/, shared/, public/, node_modules).
+    fs: {
+      deny: [".env", ".env.*", "*.{crt,pem,key}", "**/.git/**", "**/data/**", "*.db", "*.db-*", "**/server/**", "**/tests/**", "**/scripts/**"],
+    },
     headers: securityHeaders,
     // Send /api calls to the Express server during development.
     proxy: { "/api": { target: "http://localhost:4000", changeOrigin: false }, "/uploads": { target: "http://localhost:4000", changeOrigin: false } },

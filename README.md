@@ -76,7 +76,8 @@ your password, never the password itself, and git ignores it.
 
 | Setting | What it does |
 |---|---|
-| `whatsappNumber` | Your WhatsApp number, **digits only in international format**, e.g. `"9647501234567"` |
+| `whatsappNumber` | Your WhatsApp number, **digits only in international format** (set to `9647509225927`) |
+| `whatsappDisplay` | How the number is shown to customers (`0750 922 5927`) |
 | `instagram` | Your Instagram handle without `@` |
 | `shippingFlat` / `freeShippingThreshold` | Delivery charge, and the order amount from which delivery is free (**80**) |
 | `deliveryArea` | Shown to customers ("all of Iraq & Kurdistan") |
@@ -121,6 +122,9 @@ Errors are always JSON: `{ "error": "message", "fields": { … } }`.
 ---
 
 ## Deploying
+
+**Step-by-step guide for going live at frostshop.store: see [DEPLOY.md](DEPLOY.md)**
+(hosting, domain, DNS, backups, updates).
 
 The site and API run as **one Node.js app** (the server also serves the built
 website). Use a host that runs Node and gives you a **persistent disk** for the

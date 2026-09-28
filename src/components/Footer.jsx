@@ -4,7 +4,7 @@ import { instagramLink, isValidWhatsAppNumber, whatsappLink, moneyWhole } from "
 
 export default function Footer() {
   const ig = instagramLink();
-  const wa = isValidWhatsAppNumber(STORE.whatsappNumber) ? whatsappLink(`Hi ${STORE.name}!`) : "";
+  const wa = isValidWhatsAppNumber(STORE.whatsappNumber) ? whatsappLink() : "";
 
   return (
     <footer className="site-footer">
@@ -45,7 +45,7 @@ export default function Footer() {
             {wa && (
               <li>
                 <a href={wa} target="_blank" rel="noopener noreferrer">
-                  <IconWhatsApp size={16} /> WhatsApp us
+                  <IconWhatsApp size={16} /> {STORE.whatsappDisplay}
                 </a>
               </li>
             )}

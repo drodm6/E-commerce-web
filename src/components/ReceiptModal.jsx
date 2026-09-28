@@ -1,7 +1,7 @@
 import { useRef, useState, useId } from "react";
 import { IconSnow, IconCamera, IconWhatsApp, IconCopy, IconCheck, IconClose } from "./Icons.jsx";
 import { useDialog, useExitAnimation } from "../hooks/useDialog.js";
-import { money, formatDate, whatsappLink, isValidWhatsAppNumber } from "../utils/helpers.js";
+import { money, formatDate, whatsappLink, isValidWhatsAppNumber, copyText } from "../utils/helpers.js";
 import { ORDER_STATUSES } from "../utils/validate.js";
 import { STORE } from "../config.js";
 import "./ReceiptModal.css";
@@ -35,20 +35,15 @@ export default function ReceiptModal({ order, onClose }) {
   const ref = useRef(null);
   const titleId = useId();
   const [closing, requestClose] = useExitAnimation(onClose, 300);
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState(""); // "", "ok" or "fail"
   useDialog(ref, requestClose);
 
   const c = order.customer;
   const waReady = isValidWhatsAppNumber(STORE.whatsappNumber);
 
   async function copyNumber() {
-    try {
-      await navigator.clipboard.writeText(order.orderNumber);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
-    } catch {
-      /* clipboard blocked — the number is visible anyway */
-    }
+    setCopied((await copyText(order.orderNumber)) ? "ok" : "fail");
+    setTimeout(() => setCopied(""), 2200);
   }
 
   return (
@@ -63,8 +58,14 @@ export default function ReceiptModal({ order, onClose }) {
             <IconCamera size={22} />
           </span>
           <p>
-            <b>One last step!</b> Take a screenshot of this receipt and send it to us on WhatsApp — your order is confirmed once we
-            receive it.
+            <b>One last step!</b> Take a screenshot of this receipt and send it to us on WhatsApp
+            {waReady && (
+              <>
+                {" "}
+                at <b className="rc-nowrap">{STORE.whatsappDisplay}</b>
+              </>
+            )}{" "}
+            — your order is confirmed once we receive it.
           </p>
         </div>
 
@@ -79,10 +80,10 @@ export default function ReceiptModal({ order, onClose }) {
 
           <div className="rc-number">
             <span>Order number</span>
-            <h2 id={titleId}>#{order.orderNumber}</h2>
+            <h2 id={titleId} className="rc-selectable">#{order.orderNumber}</h2>
             <button className="rc-copy" onClick={copyNumber} aria-label="Copy order number">
-              {copied ? <IconCheck size={15} /> : <IconCopy size={15} />}
-              {copied ? "Copied" : "Copy"}
+              {copied === "ok" ? <IconCheck size={15} /> : <IconCopy size={15} />}
+              {copied === "ok" ? "Copied" : copied === "fail" ? "Hold to copy" : "Copy"}
             </button>
           </div>
 
@@ -156,6 +157,11 @@ export default function ReceiptModal({ order, onClose }) {
           </dl>
 
           <footer className="rc-foot">
+            {waReady && (
+              <p className="rc-foot-wa">
+                <IconWhatsApp size={14} /> Send this screenshot to <b>{STORE.whatsappDisplay}</b>
+              </p>
+            )}
             Thank you for shopping with Frost{STORE.instagram ? ` · @${STORE.instagram}` : ""}
           </footer>
         </article>
@@ -164,13 +170,19 @@ export default function ReceiptModal({ order, onClose }) {
           <h3>What to do next</h3>
           <ol>
             <li>
-              <b>Screenshot</b> this receipt.
+              <span>
+                <b>Screenshot</b> this receipt.
+              </span>
             </li>
             <li>
-              Tap <b>Send on WhatsApp</b> — your order details are already written for you.
+              <span>
+                Tap <b>Send on WhatsApp</b> — it opens a chat with us and your order details are already written for you.
+              </span>
             </li>
             <li>
-              <b>Attach the screenshot</b> and press send. We'll reply to confirm.
+              <span>
+                <b>Attach the screenshot</b> and press send. We'll reply to confirm.
+              </span>
             </li>
           </ol>
 
@@ -179,12 +191,18 @@ export default function ReceiptModal({ order, onClose }) {
               <IconWhatsApp size={20} /> Send on WhatsApp
             </a>
           ) : (
-            <p className="rc-warn">The store's WhatsApp number hasn't been set up yet (see src/config.js).</p>
+            <p className="rc-warn">The store's WhatsApp number hasn't been set up yet (see shared/store.js).</p>
           )}
           {waReady && (
-            <p className="rc-wa-number">
-              or message <b>+{STORE.whatsappNumber}</b> directly
-            </p>
+            <a className="rc-wa-card" href={whatsappLink()} target="_blank" rel="noopener noreferrer" aria-label={`Open a WhatsApp chat with Frost at ${STORE.whatsappDisplay}`}>
+              <span className="rc-wa-icon">
+                <IconWhatsApp size={22} />
+              </span>
+              <span>
+                <small>Our WhatsApp — tap to open the chat</small>
+                <b>{STORE.whatsappDisplay}</b>
+              </span>
+            </a>
           )}
           <button className="btn btn-outline btn-block" onClick={requestClose}>
             Done

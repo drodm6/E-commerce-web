@@ -1,0 +1,23 @@
+# systemd service for a VPS (Option B in DEPLOY.md).
+# Keeps the shop running and restarts it if it crashes or the server reboots.
+[Unit]
+Description=Frost shop
+After=network.target
+
+[Service]
+Type=simple
+User=frost
+WorkingDirectory=/home/frost/E-commerce-web
+EnvironmentFile=/home/frost/E-commerce-web/server/.env
+Environment=NODE_ENV=production
+Environment=PORT=4000
+ExecStart=/usr/bin/npm start
+Restart=on-failure
+RestartSec=5
+# hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target

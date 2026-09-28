@@ -407,3 +407,67 @@
     font-size: 22px;
   }
 }
+
+/* Order number can always be selected/long-pressed as a last resort */
+.rc-selectable {
+  user-select: all;
+  -webkit-user-select: all;
+}
+.rc-nowrap {
+  white-space: nowrap;
+}
+
+/* Shop's WhatsApp printed on the receipt itself (appears in screenshots) */
+.rc-foot-wa {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: var(--text);
+}
+.rc-foot-wa svg {
+  color: var(--whatsapp);
+}
+
+/* Big tappable card with the shop's number — opens the WhatsApp chat */
+.rc-wa-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(23, 138, 70, 0.35);
+  background: #eef8f1;
+  color: var(--text);
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+.rc-wa-card:hover {
+  background: #e2f3e8;
+}
+.rc-wa-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--whatsapp);
+  color: #fff;
+}
+.rc-wa-card small {
+  display: block;
+  font-size: 12px;
+  color: var(--text-soft);
+}
+.rc-wa-card b {
+  font-size: 20px;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+.rc-wa-card + .btn {
+  margin-top: 10px;
+}

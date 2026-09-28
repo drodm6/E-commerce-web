@@ -1,5 +1,6 @@
 import express from "express";
 import helmet from "helmet";
+import compression from "compression";
 import cookieParser from "cookie-parser";
 import { existsSync, mkdirSync } from "node:fs";
 import path from "node:path";
@@ -51,6 +52,8 @@ export function createApp({ config, db }) {
       strictTransportSecurity: config.production ? { maxAge: 63072000, includeSubDomains: true } : false,
     })
   );
+  app.use(compression()); // ~3× smaller downloads on mobile data
+
   app.use((req, res, next) => {
     res.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=(), usb=()");
     next();
@@ -118,6 +121,9 @@ export function createApp({ config, db }) {
       })
     );
   }
+
+  // Anything else: a plain 404 (never the framework's default error page).
+  app.use((req, res) => res.status(404).type("text/plain").send("Not found"));
 
   // Errors: clean JSON, never stack traces or internals.
   app.use((err, req, res, next) => {

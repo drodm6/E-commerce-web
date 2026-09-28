@@ -4,7 +4,7 @@ import { useDialog } from "../hooks/useDialog.js";
 import GarmentArt from "../components/GarmentArt.jsx";
 import { IconClose, IconWhatsApp, IconCopy, IconCheck } from "../components/Icons.jsx";
 import { api } from "../api.js";
-import { money, formatDate } from "../utils/helpers.js";
+import { money, formatDate, copyText } from "../utils/helpers.js";
 import { ORDER_STATUSES } from "../utils/validate.js";
 import { customerWhatsApp } from "./adminUtils.js";
 
@@ -53,12 +53,9 @@ export default function OrderDetail({ orderNumber, guard, onClose, onChanged, on
   }
 
   async function copy(text, what) {
-    try {
-      await navigator.clipboard.writeText(text);
+    if (await copyText(text)) {
       setCopied(what);
       setTimeout(() => setCopied(""), 1500);
-    } catch {
-      /* ignore */
     }
   }
 

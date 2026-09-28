@@ -11,6 +11,7 @@ import MyOrdersModal from "./components/MyOrdersModal.jsx";
 import Footer from "./components/Footer.jsx";
 import Toast from "./components/Toast.jsx";
 import DeliveryBar from "./components/DeliveryBar.jsx";
+import WhatsAppButton from "./components/WhatsAppButton.jsx";
 import { api } from "./api.js";
 import { loadCartRaw, saveCart, loadMyOrders, saveMyOrders } from "./utils/storage.js";
 import { sanitizeCart, LIMITS } from "./utils/validate.js";
@@ -98,6 +99,7 @@ export default function Storefront({ products: loaded, loadError, onRetry }) {
     });
     setCart([]);
     setCartOpen(false);
+    setToast(null); // never let a toast end up in the receipt screenshot
     setReceipt(saved);
     onRetry(); // refresh stock
   }
@@ -198,6 +200,7 @@ export default function Storefront({ products: loaded, loadError, onRetry }) {
       </main>
 
       <Footer />
+      <WhatsAppButton />
 
       {active && (
         <ProductModal
