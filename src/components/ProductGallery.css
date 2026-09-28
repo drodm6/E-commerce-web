@@ -1,0 +1,214 @@
+.gal-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 0;
+  height: 100%;
+}
+
+.gal {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 40%, #ffffff 0%, var(--cream) 75%);
+  outline: none;
+  touch-action: pan-y; /* vertical scroll still works; horizontal = swipe */
+  user-select: none;
+  -webkit-user-select: none;
+}
+.gal:focus-visible {
+  box-shadow: 0 0 0 3px var(--caramel);
+}
+
+.gal-track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.55s var(--ease-out);
+}
+.gal-slide {
+  flex: 0 0 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+.gal-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* show the whole garment, never crop it */
+  pointer-events: none;
+}
+.gal-slide .garment-art {
+  width: 70%;
+  height: 70%;
+}
+
+/* No photos yet: illustration tinted by the chosen colour */
+.gal-art {
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(circle at 50% 40%, #ffffff 0%, transparent 60%),
+    linear-gradient(160deg, var(--cream) 0%, color-mix(in srgb, var(--tint) 18%, var(--linen)) 100%);
+  transition: background 0.5s;
+}
+.gal-art-inner {
+  width: 70%;
+  height: 70%;
+  display: grid;
+  place-items: center;
+  animation: art-in 0.5s var(--ease-out) both;
+}
+.gal-art-inner .garment-art {
+  width: 100%;
+  height: 100%;
+}
+
+.gal-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  margin-top: -21px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--espresso);
+  box-shadow: var(--shadow-1);
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s var(--ease-out);
+}
+.gal-prev {
+  left: 12px;
+}
+.gal-next {
+  right: 12px;
+}
+.gal:hover .gal-arrow,
+.gal:focus-within .gal-arrow {
+  opacity: 1;
+}
+.gal-arrow:hover {
+  transform: scale(1.06);
+}
+
+.gal-dots {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  z-index: 2;
+  display: flex;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  transform: translateX(-50%);
+}
+.gal-dot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(35, 25, 19, 0.25);
+  overflow: hidden;
+  transition: width 0.3s var(--ease-out);
+}
+.gal-dot.is-active {
+  width: 26px;
+  background: rgba(35, 25, 19, 0.2);
+}
+/* fills up over 5 s to show when the next photo is coming */
+.gal-dot-fill {
+  position: absolute;
+  inset: 0;
+  background: var(--espresso);
+  transform-origin: left;
+  animation: gal-fill 5s linear both;
+}
+@keyframes gal-fill {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+.gal-count {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  z-index: 2;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(35, 25, 19, 0.7);
+  color: #fff;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.gal-thumbs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex: none;
+}
+.gal-thumbs::-webkit-scrollbar {
+  display: none;
+}
+.gal-thumb {
+  flex: none;
+  width: 60px;
+  height: 72px;
+  padding: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  background: var(--cream);
+  opacity: 0.7;
+  transition: opacity 0.2s, border-color 0.2s;
+}
+.gal-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.gal-thumb:hover {
+  opacity: 1;
+}
+.gal-thumb.is-active {
+  border-color: var(--espresso);
+  opacity: 1;
+}
+
+/* Touch screens: arrows always visible (no hover), thumbnails hidden
+   (swipe + dots are enough on a small screen). */
+@media (hover: none) {
+  .gal-arrow {
+    opacity: 1;
+    width: 36px;
+    height: 36px;
+    margin-top: -18px;
+  }
+}
+@media (max-width: 760px) {
+  .gal-thumbs {
+    display: none;
+  }
+  .gal {
+    border-radius: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gal-track {
+    transition: none;
+  }
+  .gal-dot-fill {
+    display: none;
+  }
+}

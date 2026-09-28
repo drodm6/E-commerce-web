@@ -27,6 +27,16 @@ export default function ProductCard({ product, index, onOpen }) {
             {product.compareAt && <span className="badge badge-sale">Sale</span>}
             {stock && <span className={`badge badge-${stock.tone}`}>{stock.label}</span>}
           </span>
+          {product.images.length > 1 && (
+            <span className="p-photos" aria-label={`${product.images.length} photos`}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="14" rx="2" />
+                <circle cx="9" cy="11" r="2" />
+                <path d="m21 16-5-5-9 8" />
+              </svg>
+              {product.images.length}
+            </span>
+          )}
           <span className="p-quick">View details</span>
         </span>
 

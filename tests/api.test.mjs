@@ -1,5 +1,8 @@
 // API + security tests.  Run with:  npm test
 import { test, before, after } from "node:test";
+import { mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
 import assert from "node:assert/strict";
 import { loadConfig } from "../server/config.js";
 import { openDatabase } from "../server/db.js";
@@ -30,7 +33,7 @@ async function startApp() {
   const config = loadConfig({
     skipEnvFile: true,
     env: { NODE_ENV: "test", JWT_SECRET: "x".repeat(40), ADMIN_PASSWORD_HASH: passwordHash, ADMIN_TOTP_SECRET: SECRET },
-    config: { serveStatic: false, cookieSecure: false },
+    config: { serveStatic: false, cookieSecure: false, uploadsDir: mkdtempSync(path.join(tmpdir(), "frost-uploads-")) },
   });
   const database = openDatabase(":memory:");
   const srv = createApp({ config, db: database }).listen(0);
@@ -239,6 +242,36 @@ test("parameter & prototype pollution are harmless", async () => {
   assert.equal({}.polluted, undefined);
   assert.equal({}.isAdmin, undefined);
   assert.equal(res.headers.get("cache-control"), "no-store");
+});
+
+test("photo uploads: sign-in required, real images only, size-limited, served safely", async () => {
+  const PNG = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==", "base64");
+  const up = (at, body, type, cookie) =>
+    fetch(at + "/api/admin/uploads", { method: "POST", headers: { "Content-Type": type, "X-Frost-Request": "1", ...(cookie ? { Cookie: cookie } : {}) }, body });
+
+  assert.equal((await up(base, PNG, "image/png")).status, 401); // not signed in
+
+  const { cookie, url } = await login();
+  // a script pretending to be a photo
+  assert.equal((await up(url, Buffer.from("<script>alert(1)</script>........"), "image/png", cookie)).status, 415);
+  // an SVG (can contain scripts) is never accepted
+  assert.equal((await up(url, Buffer.from('<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>'), "image/svg+xml", cookie)).status, 415);
+  // real PNG but labelled as JPEG
+  assert.equal((await up(url, PNG, "image/jpeg", cookie)).status, 415);
+  // too big
+  assert.equal((await up(url, Buffer.concat([PNG, Buffer.alloc(6 * 1024 * 1024)]), "image/png", cookie)).status, 413);
+
+  const ok = await up(url, PNG, "image/png", cookie);
+  assert.equal(ok.status, 201);
+  const { url: photo } = await ok.json();
+  assert.match(photo, /^\/uploads\/[A-Za-z0-9_-]{20,}\.png$/);
+
+  const img = await fetch(url + photo);
+  assert.equal(img.status, 200);
+  assert.equal(img.headers.get("content-type"), "image/png");
+  assert.equal(img.headers.get("x-content-type-options"), "nosniff");
+  assert.match(img.headers.get("content-security-policy"), /default-src 'none'/);
+  assert.equal((await fetch(url + "/uploads/..%2F..%2Fserver%2F.env")).status, 404); // no path traversal
 });
 
 test("unknown API routes return JSON 404", async () => {

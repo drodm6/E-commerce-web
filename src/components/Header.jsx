@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { IconBag, IconSearch, IconReceipt, IconSnow, IconInstagram } from "./Icons.jsx";
-import { instagramLink } from "../utils/helpers.js";
+import { IconBag, IconSearch, IconReceipt, IconSnow } from "./Icons.jsx";
 import "./Header.css";
 
 export default function Header({ cartCount, onCartOpen, onSearch, hasOrders, onOrdersOpen }) {
@@ -26,8 +25,6 @@ export default function Header({ cartCount, onCartOpen, onSearch, hasOrders, onO
     prevCount.current = cartCount;
   }, [cartCount]);
 
-  const ig = instagramLink();
-
   return (
     <header className={"topbar" + (scrolled ? " is-scrolled" : "")}>
       <div className="topbar-inner">
@@ -38,25 +35,10 @@ export default function Header({ cartCount, onCartOpen, onSearch, hasOrders, onO
           <span className="brand-word">FROST</span>
         </a>
 
-        <nav className="topnav" aria-label="Main">
-          <a href="#shop">Shop</a>
-          <a href="#how">How it works</a>
-          {ig && (
-            <a href={ig} target="_blank" rel="noopener noreferrer">
-              Instagram
-            </a>
-          )}
-        </nav>
-
         <div className="top-actions">
           <button className="icon-btn" onClick={onSearch} aria-label="Search products">
             <IconSearch />
           </button>
-          {ig && (
-            <a className="icon-btn hide-sm" href={ig} target="_blank" rel="noopener noreferrer" aria-label="Frost on Instagram">
-              <IconInstagram />
-            </a>
-          )}
           {hasOrders && (
             <button className="icon-btn" onClick={onOrdersOpen} aria-label="My orders and receipts">
               <IconReceipt />

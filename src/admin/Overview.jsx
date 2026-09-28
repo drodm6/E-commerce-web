@@ -16,6 +16,7 @@ const EVENT_LABELS = {
   product_deleted: "Product deleted",
   order_status: "Order status",
   order_deleted: "Order deleted",
+  photo_uploaded: "Photo uploaded",
 };
 
 export default function Overview({ products, orders, guard, onGo, openOrder, onSignOutAll }) {

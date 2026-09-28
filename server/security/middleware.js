@@ -1,6 +1,7 @@
 import rateLimit from "express-rate-limit";
 import { HttpError } from "../errors.js";
 import { COOKIE } from "./auth.js";
+import { IMAGE_TYPES } from "./images.js";
 
 const tooMany = (message) => (req, res) => res.status(429).json({ error: message });
 
@@ -38,6 +39,8 @@ export function csrfGuard(allowedOrigins) {
 
 // Only JSON bodies are accepted on write requests.
 export function requireJson(req, res, next) {
+  // The only non-JSON request: photo uploads (checked again on the route).
+  if (req.method === "POST" && req.path === "/admin/uploads" && req.is(Object.keys(IMAGE_TYPES))) return next();
   if (["POST", "PUT", "PATCH"].includes(req.method) && !req.is("application/json")) {
     return next(new HttpError(415, "Send JSON."));
   }

@@ -160,11 +160,10 @@ export default function Storefront({ products: loaded, loadError, onRetry }) {
       />
 
       <main>
-        <Hero products={products} />
+        <Hero />
 
         <section id="shop" className="shop" aria-labelledby="shop-title">
           <div className="section-head">
-            <p className="eyebrow">Winter collection</p>
             <h2 id="shop-title">The Winter Edit</h2>
             <p className="section-sub">Hand-picked coats, knits and warm layers — tap any piece to see every detail.</p>
           </div>

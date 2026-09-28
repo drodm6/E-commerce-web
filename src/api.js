@@ -68,5 +68,22 @@ export const api = {
     order: (n) => request(`/api/admin/orders/${encodeURIComponent(n)}`),
     updateOrder: (n, patch) => request(`/api/admin/orders/${encodeURIComponent(n)}`, { method: "PATCH", body: patch }).then((d) => d.order),
     deleteOrder: (n) => request(`/api/admin/orders/${encodeURIComponent(n)}`, { method: "DELETE" }),
+    // Upload one (already resized) photo; resolves to its "/uploads/…" URL.
+    uploadPhoto: async (blob) => {
+      let res;
+      try {
+        res = await fetch("/api/admin/uploads", {
+          method: "POST",
+          credentials: "same-origin",
+          headers: { "Content-Type": blob.type, "X-Frost-Request": "1" },
+          body: blob,
+        });
+      } catch {
+        throw new ApiError(0, "Upload failed — check your connection.");
+      }
+      const data = await res.json().catch(() => null);
+      if (!res.ok) throw new ApiError(res.status, data?.error || "Upload failed.");
+      return data.url;
+    },
   },
 };

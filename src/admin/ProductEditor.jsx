@@ -1,4 +1,5 @@
 import { useRef, useState, useId } from "react";
+import PhotoManager from "./PhotoManager.jsx";
 import { createPortal } from "react-dom";
 import { useDialog } from "../hooks/useDialog.js";
 import GarmentArt, { ProductVisual } from "../components/GarmentArt.jsx";
@@ -24,7 +25,7 @@ function toForm(p) {
       stock: "10",
       sizes: "S, M, L, XL",
       colors: [{ name: "Camel", hex: "#b5835a" }],
-      images: "",
+      images: [],
       desc: "",
       material: "",
       fit: "",
@@ -40,7 +41,7 @@ function toForm(p) {
     stock: String(p.stock),
     sizes: p.sizes.join(", "),
     colors: p.colors.map((c) => ({ ...c })),
-    images: p.images.join("\n"),
+    images: [...p.images],
   };
 }
 
@@ -57,8 +58,7 @@ export default function ProductEditor({ product, onSave, onClose }) {
     setErrors((er) => ({ ...er, [key]: undefined }));
   };
 
-  const imageLines = form.images.split("\n").map((s) => s.trim()).filter(Boolean);
-  const badImages = imageLines.filter((s) => !safeImageUrl(s));
+  const badImages = form.images.filter((s) => !safeImageUrl(s));
 
   function build() {
     return {
@@ -71,7 +71,7 @@ export default function ProductEditor({ product, onSave, onClose }) {
       stock: form.stock || 0,
       sizes: form.sizes.split(",").map((s) => s.trim()).filter(Boolean),
       colors: form.colors,
-      images: imageLines,
+      images: form.images,
       desc: form.desc,
       material: form.material,
       fit: form.fit,
@@ -246,13 +246,14 @@ export default function ProductEditor({ product, onSave, onClose }) {
 
             <fieldset>
               <legend>Photos &amp; details</legend>
-              {Field({
-                k: "images",
-                label: "Photo links",
-                hint: "One per line. Use https:// links, or or put photos in the public/products folder and write /products/name.jpg",
-                children: <textarea rows={3} value={form.images} onChange={set("images")} maxLength={3000} spellCheck={false} />,
-              })}
-              {badImages.length > 0 && <p className="adm-field-error">Not allowed: {badImages.slice(0, 3).join(", ")}</p>}
+              <PhotoManager
+                images={form.images}
+                onChange={(images) => {
+                  setForm((f) => ({ ...f, images }));
+                  setErrors((er) => ({ ...er, images: undefined }));
+                }}
+                error={errors.images}
+              />
               {Field({ k: "desc", label: "Description", children: <textarea rows={4} value={form.desc} onChange={set("desc")} maxLength={LIMITS.desc} /> })}
               {Field({ k: "material", label: "Material", children: <input value={form.material} onChange={set("material")} maxLength={LIMITS.detail} /> })}
               <div className="adm-grid-2">

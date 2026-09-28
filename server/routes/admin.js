@@ -1,4 +1,8 @@
-import { Router } from "express";
+import express, { Router } from "express";
+import { writeFile } from "node:fs/promises";
+import path from "node:path";
+import { randomToken } from "../security/ids.js";
+import { IMAGE_TYPES, detectImageType } from "../security/images.js";
 import { HttpError } from "../errors.js";
 import { COOKIE } from "../security/auth.js";
 import { requireAdmin } from "../security/middleware.js";
@@ -77,6 +81,25 @@ export function adminRoutes({ products, orders, auth, config, limiters }) {
     auth.audit("product_deleted", req.ip, id);
     res.json({ ok: true });
   });
+
+  // ── Photo uploads ──────────────────────────────────────────
+  // Body is the raw image (the dashboard resizes/compresses it first).
+  // The real type is checked from the file's bytes, and the file is saved
+  // under a random name — the uploader never controls the path or name.
+  r.post(
+    "/uploads",
+    authed,
+    express.raw({ type: Object.keys(IMAGE_TYPES), limit: "5mb" }),
+    async (req, res) => {
+      const declared = req.get("content-type")?.split(";")[0].trim();
+      const actual = detectImageType(req.body);
+      if (!actual || actual !== declared) throw new HttpError(415, "Only JPEG, PNG or WebP photos can be uploaded.");
+      const name = `${randomToken(18)}.${IMAGE_TYPES[actual]}`;
+      await writeFile(path.join(config.uploadsDir, name), req.body, { flag: "wx", mode: 0o644 });
+      auth.audit("photo_uploaded", req.ip, name);
+      res.status(201).json({ url: `/uploads/${name}` });
+    }
+  );
 
   // ── Orders ─────────────────────────────────────────────────
   const orderParam = (req) => {

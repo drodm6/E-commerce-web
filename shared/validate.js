@@ -42,7 +42,7 @@ export const LIMITS = {
   colorName: 20,
   maxSizes: 12,
   maxColors: 10,
-  maxImages: 6,
+  maxImages: 5,
   maxPrice: 100000,
   maxStock: 10000,
   maxQty: 20,

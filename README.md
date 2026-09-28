@@ -96,6 +96,7 @@ The list of governorates customers can choose from is `GOVERNORATES` in the same
   - Change status (New → Confirmed → Ordered from supplier → Shipping by sea → Arrived → Delivered, or Cancelled). Cancelling puts the items back in stock.
   - Search by order number, name, phone, city or address, and export CSV.
 - **Products:** add, edit, duplicate and delete. Changes are **live on the shop immediately**. You can also back up or import the catalog as JSON.
+- **Photos:** each product can have **1 to 5 photos**. In the product editor, tap **Upload photos** and pick them from your phone or computer. They're shrunk automatically before upload, so large phone photos are fine. Use the ← → buttons to reorder: the first photo is the main one shown on the product card. You can also paste an `https://` photo link instead. Uploaded photos are saved in `data/uploads/`, next to the database, so back up the whole `data/` folder.
 - **Batch & supplier:** a combined shopping list of all confirmed orders, and buttons to move orders through the shipping stages.
 
 ---
@@ -159,6 +160,7 @@ Built and checked against the **OWASP Top 10** and OWASP cheat sheets. Run the
 | **Rate limiting** | Sign-in: 5 failed attempts per 15 min per IP. Orders: 10 per hour per IP. Receipt lookups: 60 per 15 min. Admin API: 120 per minute. Whole API: 300 per 15 min. |
 | **Injection & XSS (A03)** | Every input is validated on the server with the same shared rules as the website (types, lengths, allowed values, governorate list). All SQL uses **bound parameters**. React escapes all output. Strict **Content-Security-Policy**: scripts, styles and fonts only from this site; no inline scripts, no framing. |
 | **IDOR (A01)** | Knowing an order number is not enough to see an order. Customers need the secret receipt token given at checkout, and every other case returns the same "not found". Admin routes validate IDs and require a session. |
+| **Photo uploads** | Only for signed-in admins. The real file type is checked from the file's bytes (JPEG, PNG or WebP only, never SVG or HTML). Max 5 MB. Files get random names chosen by the server and are served with `nosniff` and a locked-down Content-Security-Policy. |
 | **SSRF** | The server **never fetches URLs** supplied by users. Product photo links must be `https://` or a site path; `javascript:`, `data:`, `file:`, `http:`, internal addresses and `//` tricks are rejected. |
 | **Price tampering (A04)** | The browser only sends product IDs, sizes, colours and quantities. The server looks up prices, computes totals and checks stock inside a database transaction (no overselling). |
 | **CSRF** | SameSite=Strict cookie, a required custom request header, and an Origin check. Cross-site preflights are refused, and only JSON bodies are accepted. |

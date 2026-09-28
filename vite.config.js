@@ -51,12 +51,12 @@ export default defineConfig({
     host: true,
     headers: securityHeaders,
     // Send /api calls to the Express server during development.
-    proxy: { "/api": { target: "http://localhost:4000", changeOrigin: false } },
+    proxy: { "/api": { target: "http://localhost:4000", changeOrigin: false }, "/uploads": { target: "http://localhost:4000", changeOrigin: false } },
   },
   preview: {
     open: false,
     host: true,
-    proxy: { "/api": { target: "http://localhost:4000", changeOrigin: false } },
+    proxy: { "/api": { target: "http://localhost:4000", changeOrigin: false }, "/uploads": { target: "http://localhost:4000", changeOrigin: false } },
     headers: { ...securityHeaders, "Content-Security-Policy": CSP + "; frame-ancestors 'none'" },
   },
   build: {

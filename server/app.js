@@ -1,7 +1,7 @@
 import express from "express";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
-import { existsSync } from "node:fs";
+import { existsSync, mkdirSync } from "node:fs";
 import path from "node:path";
 import { ROOT } from "./config.js";
 import { HttpError } from "./errors.js";
@@ -86,6 +86,24 @@ export function createApp({ config, db }) {
   app.use("/api/admin", adminRoutes(deps));
   app.use("/api", publicRoutes(deps));
   app.use("/api", (req, res, next) => next(new HttpError(404, "Not found.")));
+
+  // Uploaded product photos. Files only ever have .jpg/.png/.webp names we
+  // chose, so they're always served as images, never as HTML or scripts.
+  mkdirSync(config.uploadsDir, { recursive: true });
+  app.use(
+    "/uploads",
+    express.static(config.uploadsDir, {
+      dotfiles: "deny",
+      index: false,
+      redirect: false,
+      setHeaders(res) {
+        res.set({
+          "Cache-Control": "public, max-age=31536000, immutable",
+          "Content-Security-Policy": "default-src 'none'; img-src 'self'",
+        });
+      },
+    })
+  );
 
   // Serve the built website (npm run build) from the same server.
   const dist = path.join(ROOT, "dist");

@@ -31,6 +31,8 @@ export function loadConfig(overrides = {}) {
     // the database lived inside a watched folder the server would see its
     // own write, restart, write again, and loop forever.
     dbPath: env.DB_PATH || path.join(ROOT, "data", "frost.db"),
+    // Product photos uploaded from the dashboard. Also outside server/.
+    uploadsDir: env.UPLOADS_DIR || path.join(ROOT, "data", "uploads"),
     // Number of reverse proxies in front of the server (Render, Railway, Nginx…)
     // so rate limiting sees each visitor's real IP. Production defaults to 1;
     // set TRUST_PROXY=0 if the server is exposed directly to the internet.

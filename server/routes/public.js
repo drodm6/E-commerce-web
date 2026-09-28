@@ -8,7 +8,7 @@ export function publicRoutes({ products, orders, limiters }) {
 
   // GET /api/products — the catalog
   r.get("/products", (req, res) => {
-    res.set("Cache-Control", "public, max-age=30");
+    res.set("Cache-Control", "no-cache"); // always fresh after you edit products (ETag keeps it cheap)
     res.json({ products: products.list() });
   });
 

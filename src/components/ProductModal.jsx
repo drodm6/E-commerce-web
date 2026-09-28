@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState, useId } from "react";
-import { ProductVisual } from "./GarmentArt.jsx";
+import ProductGallery from "./ProductGallery.jsx";
 import { stockBadge } from "./ProductCard.jsx";
 import { IconClose, IconMinus, IconPlus, IconShip, IconCash, IconWhatsApp, IconRuler, IconCheck, IconTruck } from "./Icons.jsx";
 import { useDialog } from "../hooks/useDialog.js";
@@ -64,7 +64,6 @@ export default function ProductModal({ product, originRect, onClose, onAdd }) {
   const [color, setColor] = useState(product.colors[0] || null);
   const [size, setSize] = useState(product.sizes.length === 1 ? product.sizes[0] : "");
   const [qty, setQty] = useState(1);
-  const [imageIndex, setImageIndex] = useState(0);
   const [showGuide, setShowGuide] = useState(false);
   const [sizeError, setSizeError] = useState(false);
   const [added, setAdded] = useState(false);
@@ -109,24 +108,18 @@ export default function ProductModal({ product, originRect, onClose, onAdd }) {
         </button>
 
         <div className="pm-gallery">
-          <div className="pm-stage" style={{ "--tint": color?.hex || "#a9774f" }}>
-            <div className="pm-stage-art" key={`${imageIndex}-${color?.name}`}>
-              <ProductVisual product={product} color={color} index={imageIndex} />
-            </div>
-            <div className="pm-badges">
-              {product.isNew && <span className="badge badge-new">New</span>}
-              {product.compareAt && <span className="badge badge-sale">Save {money(product.compareAt - product.price)}</span>}
-            </div>
-          </div>
-          {product.images.length > 1 && (
-            <div className="pm-thumbs" role="group" aria-label="Photos">
-              {product.images.map((src, i) => (
-                <button key={src} className={"pm-thumb" + (i === imageIndex ? " is-active" : "")} onClick={() => setImageIndex(i)} aria-label={`Photo ${i + 1}`} aria-pressed={i === imageIndex}>
-                  <img src={src} alt="" loading="lazy" referrerPolicy="no-referrer" />
-                </button>
-              ))}
-            </div>
-          )}
+          <ProductGallery
+            product={product}
+            color={color}
+            badges={
+              (product.isNew || product.compareAt) && (
+                <div className="pm-badges">
+                  {product.isNew && <span className="badge badge-new">New</span>}
+                  {product.compareAt && <span className="badge badge-sale">Save {money(product.compareAt - product.price)}</span>}
+                </div>
+              )
+            }
+          />
         </div>
 
         <div className="pm-info">

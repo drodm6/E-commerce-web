@@ -52,183 +52,40 @@
   color: var(--camel);
 }
 
-/* ── Hero (light, compact — the products are the star) ──── */
+/* ── Hero: one message, two buttons ─────────────────────── */
 
 .hero {
-  position: relative;
-  background:
-    radial-gradient(700px 380px at 88% 30%, rgba(196, 154, 108, 0.18), transparent 65%),
-    linear-gradient(180deg, var(--cream) 0%, var(--bg) 100%);
-  padding: clamp(36px, 6vw, 72px) 0 0;
+  text-align: center;
+  padding: clamp(48px, 9vw, 96px) var(--gutter) clamp(44px, 7vw, 80px);
+  background: linear-gradient(180deg, var(--cream) 0%, var(--bg) 100%);
   border-bottom: 1px solid var(--line);
 }
-
-.hero-inner {
-  max-width: var(--maxw);
-  margin: 0 auto;
-  padding: 0 var(--gutter);
-  display: grid;
-  grid-template-columns: 1.25fr 1fr;
-  align-items: center;
-  gap: clamp(24px, 5vw, 64px);
-}
-
 .hero h1 {
-  font-size: clamp(36px, 5.2vw, 66px);
+  font-size: clamp(36px, 6vw, 64px);
   font-weight: 500;
-  margin: 12px 0 16px;
   letter-spacing: -0.02em;
   color: var(--espresso);
+  margin: 10px auto 14px;
 }
 .hero h1 em {
   font-style: italic;
   color: var(--accent-text);
 }
-
 .hero-lede {
+  max-width: 30em;
+  margin: 0 auto;
   color: var(--text-soft);
-  font-size: clamp(16px, 1.5vw, 18px);
-  max-width: 34em;
+  font-size: clamp(16px, 1.6vw, 18px);
 }
-
 .hero-ctas {
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
   gap: 12px;
-  margin-top: 26px;
+  margin-top: 28px;
 }
-
-/* layered stack of cards */
-.hero-stack {
-  position: relative;
-  height: clamp(300px, 32vw, 400px);
-}
-.layer {
-  position: absolute;
-  width: 58%;
-  aspect-ratio: 4 / 5;
-  border-radius: var(--radius-lg);
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: var(--shadow-2);
-  rotate: var(--r);
-  animation: layer-in 0.9s var(--ease-out) both, float 7s ease-in-out infinite;
-}
-.layer-art {
-  flex: 1;
-  border-radius: 14px;
-  display: grid;
-  place-items: center;
-  padding: 10%;
-}
-.layer-art svg {
-  width: 100%;
-  height: 100%;
-}
-.layer-cap {
-  padding: 10px 4px 2px;
-  display: grid;
-  gap: 1px;
-}
-.layer-cap span {
-  font-size: 10px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  opacity: 0.75;
-}
-.layer-cap b {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 1.15;
-}
-.layer-0 {
-  left: 0;
-  top: 10%;
-  background: var(--walnut);
-  color: var(--cream);
-  --r: -6deg;
-  animation-delay: 0.05s, 0s;
-}
-.layer-0 .layer-art {
-  background: radial-gradient(circle at 50% 40%, #5a3e2d, #34241b);
-}
-.layer-1 {
-  left: 21%;
-  top: 0;
-  background: var(--paper);
-  color: var(--espresso);
-  border: 1px solid var(--line);
-  z-index: 2;
-  --r: 2deg;
-  animation-delay: 0.2s, 1.2s;
-}
-.layer-1 .layer-art {
-  background: radial-gradient(circle at 50% 40%, #fffdf9, #efe6d8);
-}
-.layer-2 {
-  right: 0;
-  top: 16%;
-  background: var(--cream-2);
-  color: var(--espresso);
-  border: 1px solid var(--line);
-  z-index: 1;
-  --r: 7deg;
-  animation-delay: 0.35s, 2.4s;
-}
-.layer-2 .layer-art {
-  background: radial-gradient(circle at 50% 40%, #faf6ef, #e4d8c6);
-}
-
-@keyframes layer-in {
-  from {
-    opacity: 0;
-    scale: 0.9;
-  }
-}
-@keyframes float {
-  50% {
-    translate: 0 -8px;
-  }
-}
-
-/* delivery & payment promises */
-.perks {
-  list-style: none;
-  max-width: var(--maxw);
-  margin: clamp(28px, 4vw, 44px) auto 0;
-  padding: 18px var(--gutter);
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  border-top: 1px solid var(--line);
-}
-.perks li {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.perks svg {
-  flex: none;
-  width: 42px;
-  height: 42px;
-  padding: 10px;
-  border-radius: 12px;
-  background: var(--paper);
-  border: 1px solid var(--line);
-  color: var(--accent-text);
-}
-.perks b {
-  display: block;
-  font-weight: 600;
-  font-size: 15px;
-  color: var(--text);
-}
-.perks small {
-  display: block;
-  font-size: 13px;
-  color: var(--muted);
+.hero-ctas .btn {
+  min-width: 190px;
 }
 
 /* ── How it works ─────────────────────────────────────────── */
@@ -558,15 +415,6 @@
 }
 
 @media (max-width: 860px) {
-  .hero-inner {
-    grid-template-columns: 1fr;
-  }
-  .hero-stack {
-    height: 320px;
-    max-width: 420px;
-    width: 100%;
-    margin: 0 auto;
-  }
   .footer-inner {
     grid-template-columns: 1fr 1fr;
   }
@@ -576,49 +424,84 @@
 }
 
 @media (max-width: 640px) {
-  .perks {
-    grid-template-columns: 1fr;
-    gap: 12px;
+  /* hero: stacked full-width buttons */
+  .hero-ctas {
+    flex-direction: column;
+    max-width: 340px;
+    margin-left: auto;
+    margin-right: auto;
   }
   .hero-ctas .btn {
-    flex: 1 1 auto;
-  }
-  .hero-stack {
-    display: none; /* on phones, get to the products faster */
+    width: 100%;
   }
   .how-steps {
     grid-template-columns: 1fr;
+  }
+
+  /* shop: short heading, one slim row for search + sort, simple grid */
+  .shop {
+    padding-top: 28px;
+  }
+  .section-head {
+    margin-bottom: 16px;
+  }
+  .section-head h2 {
+    font-size: 30px;
+  }
+  .shop .section-sub,
+  .shop .section-head .eyebrow,
+  .result-count {
+    display: none;
+  }
+  .toolbar {
+    gap: 12px;
+    margin-bottom: 18px;
   }
   .chips {
     justify-content: flex-start;
     margin: 0 calc(var(--gutter) * -1);
     padding: 2px var(--gutter);
   }
+  .chip {
+    padding: 7px 14px;
+    font-size: 13px;
+  }
   .toolbar-row {
-    flex-wrap: wrap;
-    border-radius: 20px;
+    padding: 0;
+    gap: 8px;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
   }
   .search-field {
-    flex-basis: 100%;
-    background: var(--cream);
+    height: 42px;
+    padding: 0 6px 0 12px;
+    background: var(--paper);
+    border: 1px solid var(--line-strong);
     border-radius: 999px;
   }
+  .search-field input {
+    height: 40px;
+    font-size: 16px; /* 16px stops iPhones zooming in */
+  }
   .sort-field {
-    margin-left: auto;
+    padding-left: 0;
     border-left: 0;
   }
-  .result-count {
-    padding-left: 8px;
+  .sort-field > span {
+    display: none;
+  }
+  .sort-field select {
+    height: 42px;
+    max-width: 128px;
+    background-color: var(--paper);
+    border-color: var(--line-strong);
+    font-size: 14px;
   }
   .grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-}
-
-@media (max-width: 360px) {
-  .grid {
-    grid-template-columns: 1fr;
+    gap: 18px 12px;
   }
 }
 
