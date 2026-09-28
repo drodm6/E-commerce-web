@@ -25,7 +25,12 @@ export function loadConfig(overrides = {}) {
   return {
     production,
     port: Number(env.PORT) || 4000,
-    dbPath: env.DB_PATH || path.join(ROOT, "server", "data", "frost.db"),
+    // Kept OUTSIDE server/ on purpose: `npm run dev` watches server/ and
+    // shared/ to auto-restart on code changes. SQLite writes to this file
+    // (and its -wal/-shm helper files) every time the server starts, so if
+    // the database lived inside a watched folder the server would see its
+    // own write, restart, write again, and loop forever.
+    dbPath: env.DB_PATH || path.join(ROOT, "data", "frost.db"),
     // Number of reverse proxies in front of the server (Render, Railway, Nginx…)
     // so rate limiting sees each visitor's real IP. Production defaults to 1;
     // set TRUST_PROXY=0 if the server is exposed directly to the internet.

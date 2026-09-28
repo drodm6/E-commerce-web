@@ -156,14 +156,15 @@ test("admin login: wrong password or code fails, 2FA required, cookie is locked 
   assert.equal((await api("/api/admin/login", { method: "POST", body: { password: "wrong", code: totpAt(SECRET, currentStep()) } })).status, 401);
   assert.equal((await api("/api/admin/login", { method: "POST", body: { password: PASSWORD, code: "000000" } })).status, 401);
   assert.equal((await api("/api/admin/login", { method: "POST", body: { password: PASSWORD } })).status, 401);
-  const res = await api("/api/admin/login", { method: "POST", body: { password: PASSWORD, code: totpAt(SECRET, currentStep()) } });
+  const code = totpAt(SECRET, currentStep()); // captured once so the replay below reuses the exact same code
+  const res = await api("/api/admin/login", { method: "POST", body: { password: PASSWORD, code } });
   assert.equal(res.status, 200);
   const cookie = res.headers.get("set-cookie");
   assert.match(cookie, /HttpOnly/i);
   assert.match(cookie, /SameSite=Strict/i);
   assert.match(cookie, /Path=\/api\/admin/i);
   // replay: the same code can't be used twice
-  assert.equal((await api("/api/admin/login", { method: "POST", body: { password: PASSWORD, code: totpAt(SECRET, currentStep()) } })).status, 401);
+  assert.equal((await api("/api/admin/login", { method: "POST", body: { password: PASSWORD, code } })).status, 401);
 });
 
 test("admin can manage products; invalid/unsafe fields rejected (SSRF/XSS URLs)", async () => {
