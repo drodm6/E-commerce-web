@@ -18,8 +18,7 @@ function buildMessage(order) {
     `Order: #${order.orderNumber}`,
     `Name: ${c.name}`,
     `Phone: ${c.phone}`,
-    `City: ${c.city}`,
-    `Address: ${c.address}`,
+    `Address: ${c.address}, ${c.city}, ${c.governorate}`,
     c.notes ? `Note: ${c.notes}` : null,
     ``,
     ...lines,
@@ -113,7 +112,7 @@ export default function ReceiptModal({ order, onClose }) {
             <p>
               <b>{c.name}</b> · {c.phone}
               <br />
-              {c.address}, {c.city}
+              {c.address}, {c.city}, {c.governorate}
               {c.notes && (
                 <>
                   <br />
@@ -148,7 +147,7 @@ export default function ReceiptModal({ order, onClose }) {
             </div>
             <div>
               <dt>Delivery</dt>
-              <dd>{order.shipping === 0 ? "Free" : money(order.shipping)}</dd>
+              <dd>{order.shipping === 0 ? "Free — to your door" : money(order.shipping)}</dd>
             </div>
             <div className="rc-grand">
               <dt>Pay on delivery</dt>

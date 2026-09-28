@@ -42,7 +42,8 @@ t("product: huge name truncated", sanitizeProduct({ ...products[0], name: "A".re
 t("text: bidi override stripped", cleanText("abc‮def", 50) === "abcdef");
 
 t("customer: invalid phone rejected", !validateCustomer({ name: "Al", phone: "call me", city: "Erbil", address: "street 1" }).ok);
-t("customer: valid accepted", validateCustomer({ name: "Ali", phone: "07501234567", city: "Erbil", address: "street 1" }).ok);
+t("customer: valid accepted", validateCustomer({ name: "Ali", phone: "07501234567", governorate: "Erbil", city: "Erbil", address: "street 1" }).ok);
+t("customer: missing governorate rejected", !validateCustomer({ name: "Ali", phone: "07501234567", city: "Erbil", address: "street 1" }).ok);
 
 t("cart: unknown product dropped", sanitizeCart([{ id: "P-9999", qty: 1 }], products).length === 0);
 t("cart: qty clamped to stock", sanitizeCart([{ id: "P-1012", qty: 20, size: "M", color: "Oat" }], products)[0].qty === 3);

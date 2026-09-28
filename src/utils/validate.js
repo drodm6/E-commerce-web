@@ -7,6 +7,7 @@
 // (OWASP A03 Injection / A08 Data Integrity).
 
 import { round2 } from "./helpers.js";
+import { GOVERNORATES } from "../config.js";
 
 export const CATEGORIES = ["Coats", "Jackets", "Knitwear", "Hoodies", "Trousers", "Accessories", "Footwear"];
 
@@ -196,6 +197,7 @@ export function sanitizeCart(list, products) {
 export const CUSTOMER_FIELDS = {
   name: { max: 60, min: 2 },
   phone: { max: 20, min: 7 },
+  governorate: { max: 30, min: 2 },
   city: { max: 40, min: 2 },
   address: { max: 160, min: 5 },
   notes: { max: 200, min: 0 },
@@ -205,6 +207,7 @@ export function validateCustomer(raw) {
   const value = {
     name: cleanText(raw.name, CUSTOMER_FIELDS.name.max),
     phone: cleanText(raw.phone, CUSTOMER_FIELDS.phone.max),
+    governorate: cleanText(raw.governorate, CUSTOMER_FIELDS.governorate.max),
     city: cleanText(raw.city, CUSTOMER_FIELDS.city.max),
     address: cleanText(raw.address, CUSTOMER_FIELDS.address.max),
     notes: cleanText(raw.notes, CUSTOMER_FIELDS.notes.max),
@@ -212,7 +215,8 @@ export function validateCustomer(raw) {
   const errors = {};
   if (value.name.length < 2) errors.name = "Please enter your full name.";
   if (!/^\+?[0-9][0-9\s-]{6,18}$/.test(value.phone)) errors.phone = "Enter a valid phone number (digits only).";
-  if (value.city.length < 2) errors.city = "Please enter your city.";
+  if (!GOVERNORATES.includes(value.governorate)) errors.governorate = "Please choose your governorate.";
+  if (value.city.length < 2) errors.city = "Please enter your city or area.";
   if (value.address.length < 5) errors.address = "Please enter a delivery address or nearest landmark.";
   return { value, errors, ok: Object.keys(errors).length === 0 };
 }

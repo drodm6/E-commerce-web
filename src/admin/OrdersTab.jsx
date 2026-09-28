@@ -250,7 +250,7 @@ export function OrderDetails({ order }) {
             <br />
             {c.phone}
             <br />
-            {c.address}, {c.city}
+            {c.address}, {c.city}{c.governorate ? `, ${c.governorate}` : ""}
             {c.notes && (
               <>
                 <br />

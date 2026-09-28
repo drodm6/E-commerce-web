@@ -10,6 +10,7 @@ import ReceiptModal from "./components/ReceiptModal.jsx";
 import MyOrdersModal from "./components/MyOrdersModal.jsx";
 import Footer from "./components/Footer.jsx";
 import Toast from "./components/Toast.jsx";
+import DeliveryBar from "./components/DeliveryBar.jsx";
 import { loadCartRaw, saveCart, loadMyOrders, saveMyOrders } from "./utils/storage.js";
 import { sanitizeCart, LIMITS } from "./utils/validate.js";
 import { uid, cartKey, computeTotals } from "./utils/helpers.js";
@@ -125,6 +126,8 @@ export default function Storefront({ products, isDraft }) {
         Skip to products
       </a>
 
+      <DeliveryBar />
+
       <Header
         cartCount={cartCount}
         onCartOpen={() => setCartOpen(true)}
@@ -141,7 +144,6 @@ export default function Storefront({ products, isDraft }) {
 
       <main>
         <Hero products={products} />
-        <HowItWorks />
 
         <section id="shop" className="shop" aria-labelledby="shop-title">
           <div className="section-head">
@@ -172,6 +174,8 @@ export default function Storefront({ products, isDraft }) {
             }}
           />
         </section>
+
+        <HowItWorks />
       </main>
 
       <Footer />

@@ -22,6 +22,9 @@ export const STORE = {
   shippingFlat: 4.99,
   freeShippingThreshold: 80,
 
+  // Where you deliver (shown to customers).
+  deliveryArea: "all of Iraq & Kurdistan",
+
   // Shown to customers: how long a pre-order takes to arrive.
   deliveryEstimate: "3–5 weeks",
 
@@ -40,3 +43,27 @@ export const ADMIN = {
   maxAttempts: 5,
   lockoutMinutes: 5,
 };
+
+// Governorates we deliver to — every governorate of Iraq, including the
+// Kurdistan Region. Checkout only accepts values from this list.
+export const GOVERNORATES = [
+  "Erbil",
+  "Sulaymaniyah",
+  "Duhok",
+  "Halabja",
+  "Baghdad",
+  "Basra",
+  "Nineveh",
+  "Kirkuk",
+  "Anbar",
+  "Babil",
+  "Karbala",
+  "Najaf",
+  "Diyala",
+  "Saladin",
+  "Wasit",
+  "Maysan",
+  "Dhi Qar",
+  "Muthanna",
+  "Al-Qadisiyyah",
+];

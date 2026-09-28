@@ -10,6 +10,9 @@ export function money(n) {
   return currencyFormat.format(Number.isFinite(v) ? v : 0);
 }
 
+export const moneyWhole = (n) =>
+  new Intl.NumberFormat(STORE.currency.locale, { style: "currency", currency: STORE.currency.code, maximumFractionDigits: 0 }).format(n);
+
 export function round2(n) {
   return Math.round(Number(n) * 100) / 100;
 }

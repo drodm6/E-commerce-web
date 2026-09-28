@@ -4,10 +4,11 @@ import { IconClose, IconMinus, IconPlus, IconTrash, IconShip, IconArrowRight, Ic
 import { useDialog, useExitAnimation } from "../hooks/useDialog.js";
 import { money, computeTotals } from "../utils/helpers.js";
 import { validateCustomer, CUSTOMER_FIELDS, LIMITS } from "../utils/validate.js";
-import { STORE } from "../config.js";
+import { STORE, GOVERNORATES } from "../config.js";
+import { moneyWhole } from "../utils/helpers.js";
 import "./CartDrawer.css";
 
-const EMPTY_CUSTOMER = { name: "", phone: "", city: "", address: "", notes: "" };
+const EMPTY_CUSTOMER = { name: "", phone: "", governorate: "", city: "", address: "", notes: "" };
 
 export default function CartDrawer({ lines, onClose, onQtyChange, onRemove, onPlaceOrder }) {
   const ref = useRef(null);
@@ -98,10 +99,10 @@ export default function CartDrawer({ lines, onClose, onQtyChange, onRemove, onPl
                     <p>
                       {toFree > 0 ? (
                         <>
-                          Add <b>{money(toFree)}</b> more for free delivery
+                          Add <b>{money(toFree)}</b> more for <b>free delivery</b> to your door
                         </>
                       ) : (
-                        <b>You've unlocked free delivery ✓</b>
+                        <b>You've unlocked free delivery to your address ✓</b>
                       )}
                     </p>
                     <div className="free-bar">
@@ -145,8 +146,8 @@ export default function CartDrawer({ lines, onClose, onQtyChange, onRemove, onPl
                   <div className="preorder-note">
                     <IconShip size={20} />
                     <p>
-                      <b>Pre-order:</b> we collect orders and ship them together by sea to keep prices low. Expected delivery in about{" "}
-                      {STORE.deliveryEstimate}. You pay in cash when it arrives.
+                      <b>Pre-order:</b> we collect orders and ship them together by sea to keep prices low. Delivered to {STORE.deliveryArea}{" "}
+                      in about {STORE.deliveryEstimate}. Free delivery on orders over {moneyWhole(STORE.freeShippingThreshold)}. You pay in cash when it arrives.
                     </p>
                   </div>
                 </>
@@ -170,7 +171,32 @@ export default function CartDrawer({ lines, onClose, onQtyChange, onRemove, onPl
               <p className="form-intro">We'll use these details to deliver your order and to match your WhatsApp message.</p>
               {field("name", "Full name", { autoComplete: "name", required: true })}
               {field("phone", "Phone / WhatsApp number", { autoComplete: "tel", inputMode: "tel", type: "tel", required: true })}
-              {field("city", "City", { autoComplete: "address-level2", required: true })}
+              <label className={"field" + (errors.governorate ? " has-error" : "")}>
+                <span className="field-label">Governorate</span>
+                <select
+                  value={customer.governorate}
+                  onChange={(e) => {
+                    setCustomer({ ...customer, governorate: e.target.value });
+                    if (errors.governorate) setErrors({ ...errors, governorate: undefined });
+                  }}
+                  aria-invalid={errors.governorate ? "true" : "false"}
+                  required
+                >
+                  <option value="">Choose your governorate…</option>
+                  <optgroup label="Kurdistan Region">
+                    {GOVERNORATES.slice(0, 4).map((g) => (
+                      <option key={g}>{g}</option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="Iraq">
+                    {GOVERNORATES.slice(4).map((g) => (
+                      <option key={g}>{g}</option>
+                    ))}
+                  </optgroup>
+                </select>
+                {errors.governorate && <span className="field-error">{errors.governorate}</span>}
+              </label>
+              {field("city", "City / area", { autoComplete: "address-level2", required: true })}
               {field("address", "Address or nearest landmark", { autoComplete: "street-address", required: true })}
               {field("notes", "Note for us", { placeholder: "e.g. best time to call" })}
 
