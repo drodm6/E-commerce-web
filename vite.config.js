@@ -44,12 +44,18 @@ export default defineConfig({
   server: {
     port: 5173,
     open: true,
+    // Listen on your whole home network (0.0.0.0), not just this computer,
+    // so you can open the site from your phone at http://<your-computer's-IP>:5173
+    // (phone and computer must be on the same Wi-Fi). Vite prints that
+    // address as "Network:" when the dev server starts.
+    host: true,
     headers: securityHeaders,
     // Send /api calls to the Express server during development.
     proxy: { "/api": { target: "http://localhost:4000", changeOrigin: false } },
   },
   preview: {
     open: false,
+    host: true,
     proxy: { "/api": { target: "http://localhost:4000", changeOrigin: false } },
     headers: { ...securityHeaders, "Content-Security-Policy": CSP + "; frame-ancestors 'none'" },
   },
