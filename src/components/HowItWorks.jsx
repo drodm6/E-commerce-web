@@ -15,11 +15,11 @@ const STEPS = [
   {
     icon: IconWhatsApp,
     title: "Send it on WhatsApp",
-    text: "Screenshot the receipt and message it to us. We reply to confirm your order.",
+    text: "Screenshot the receipt and message it to us. Pay half online to register your order.",
   },
   {
     icon: IconShip,
-    title: "Shipped together, pay at the door",
+    title: "Shipped together, pay the rest at the door",
     text: `Orders travel together by sea or air to keep prices low, then we deliver to your door anywhere in Iraq & Kurdistan in about ${STORE.deliveryEstimate}. Free delivery over $${STORE.freeShippingThreshold}.`,
   },
 ];

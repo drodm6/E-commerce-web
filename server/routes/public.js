@@ -19,7 +19,7 @@ export function publicRoutes({ products, orders, limiters }) {
     res.json({ product: p });
   });
 
-  // POST /api/orders — place an order (cash on delivery)
+  // POST /api/orders — place an order (half paid online, half on delivery)
   r.post("/orders", limiters.placeOrder, (req, res) => {
     // Honeypot: a hidden form field real customers never fill in.
     if (req.body?.website) throw new HttpError(400, "Order could not be placed.");

@@ -25,7 +25,6 @@ export default function ProductCard({ product, index, onOpen }) {
           <span className="p-badges">
             {product.isNew && <span className="badge badge-new">New</span>}
             {product.compareAt && <span className="badge badge-sale">Sale</span>}
-            {stock && <span className={`badge badge-${stock.tone}`}>{stock.label}</span>}
           </span>
           {product.images.length > 1 && (
             <span className="p-photos" aria-label={`${product.images.length} photos`}>
@@ -44,9 +43,12 @@ export default function ProductCard({ product, index, onOpen }) {
           <span className="p-cat">{product.category}</span>
           <span className="p-name">{product.name}</span>
           <span className="p-bottom">
-            <span className="p-price">
-              {money(product.price)}
-              {product.compareAt && <s>{money(product.compareAt)}</s>}
+            <span className="p-price-row">
+              <span className="p-price">
+                {money(product.price)}
+                {product.compareAt && <s>{money(product.compareAt)}</s>}
+              </span>
+              {stock && <span className={`p-stock p-stock-${stock.tone}`}>{stock.label}</span>}
             </span>
             {product.colors.length > 0 && (
               <span className="p-swatches" aria-label={`${product.colors.length} colours`}>

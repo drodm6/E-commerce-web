@@ -292,6 +292,14 @@
   font-weight: 600;
   line-height: 1;
 }
+.totals-split {
+  font-size: 13px;
+}
+.totals-split dt,
+.totals-split dd {
+  color: var(--accent-text);
+  font-weight: 600;
+}
 
 @media (max-width: 480px) {
   .drawer-body {

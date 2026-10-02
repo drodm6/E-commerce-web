@@ -26,7 +26,7 @@ export default function Footer() {
           <h3>Ordering</h3>
           <ul>
             <li>Pre-order · {STORE.deliveryEstimate}</li>
-            <li>Cash on delivery</li>
+            <li>Pay half now, half on delivery</li>
             <li>Free delivery to your door over {moneyWhole(STORE.freeShippingThreshold)}</li>
             <li>Delivering to all Iraq &amp; Kurdistan</li>
           </ul>

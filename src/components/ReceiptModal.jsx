@@ -1,13 +1,14 @@
 import { useRef, useState, useId } from "react";
 import { IconSnow, IconCamera, IconWhatsApp, IconCopy, IconCheck, IconClose } from "./Icons.jsx";
 import { useDialog, useExitAnimation } from "../hooks/useDialog.js";
-import { money, formatDate, whatsappLink, isValidWhatsAppNumber, copyText } from "../utils/helpers.js";
+import { money, formatDate, whatsappLink, isValidWhatsAppNumber, copyText, paymentSplit } from "../utils/helpers.js";
 import { ORDER_STATUSES } from "../utils/validate.js";
 import { STORE } from "../config.js";
 import "./ReceiptModal.css";
 
 function buildMessage(order) {
   const c = order.customer;
+  const { deposit, rest } = paymentSplit(order.total);
   const lines = order.items.map((i) => {
     const opts = [i.size && `Size ${i.size}`, i.color].filter(Boolean).join(", ");
     return `• ${i.qty} × ${i.name}${opts ? ` (${opts})` : ""} — ${money(i.price * i.qty)}`;
@@ -23,7 +24,9 @@ function buildMessage(order) {
     ``,
     ...lines,
     ``,
-    `Total (cash on delivery): ${money(order.total)}`,
+    `Total: ${money(order.total)}`,
+    `Half now (online): ${money(deposit)}`,
+    `Half on delivery: ${money(rest)}`,
     ``,
     `📸 My receipt screenshot is attached.`,
   ]
@@ -40,6 +43,7 @@ export default function ReceiptModal({ order, onClose }) {
 
   const c = order.customer;
   const waReady = isValidWhatsAppNumber(STORE.whatsappNumber);
+  const { deposit, rest } = paymentSplit(order.total);
 
   async function copyNumber() {
     setCopied((await copyText(order.orderNumber)) ? "ok" : "fail");
@@ -55,17 +59,16 @@ export default function ReceiptModal({ order, onClose }) {
 
         <div className="rc-alert" role="status">
           <span className="rc-alert-icon">
-            <IconCamera size={22} />
+            <IconCamera size={18} />
           </span>
           <p>
-            <b>One last step!</b> Take a screenshot of this receipt and send it to us on WhatsApp
+            <b>Screenshot this receipt</b> and send it on WhatsApp
             {waReady && (
               <>
                 {" "}
-                at <b className="rc-nowrap">{STORE.whatsappDisplay}</b>
+                to <b className="rc-nowrap">{STORE.whatsappDisplay}</b>
               </>
-            )}{" "}
-            — your order is confirmed once we receive it.
+            )}
           </p>
         </div>
 
@@ -95,12 +98,12 @@ export default function ReceiptModal({ order, onClose }) {
             <div>
               <dt>Status</dt>
               <dd className="rc-status">
-                {order.status === "new" ? "Awaiting WhatsApp confirmation" : ORDER_STATUSES.find((s) => s.id === order.status)?.label}
+                {order.status === "new" ? "Awaiting half payment" : ORDER_STATUSES.find((s) => s.id === order.status)?.label}
               </dd>
             </div>
             <div>
               <dt>Payment</dt>
-              <dd>Cash on delivery</dd>
+              <dd>Half now · half on delivery</dd>
             </div>
             <div>
               <dt>Est. delivery</dt>
@@ -150,9 +153,20 @@ export default function ReceiptModal({ order, onClose }) {
               <dt>Delivery</dt>
               <dd>{order.shipping === 0 ? "Free — to your door" : money(order.shipping)}</dd>
             </div>
-            <div className="rc-grand">
-              <dt>Pay on delivery</dt>
+            <div className="rc-total">
+              <dt>Total</dt>
               <dd>{money(order.total)}</dd>
+            </div>
+            <div className="rc-grand">
+              <dt>
+                Pay now online
+                <small>Half, to register your order</small>
+              </dt>
+              <dd>{money(deposit)}</dd>
+            </div>
+            <div className="rc-later">
+              <dt>Pay when it arrives</dt>
+              <dd>{money(rest)}</dd>
             </div>
           </dl>
 
@@ -176,12 +190,17 @@ export default function ReceiptModal({ order, onClose }) {
             </li>
             <li>
               <span>
-                Tap <b>Send on WhatsApp</b> — it opens a chat with us and your order details are already written for you.
+                Tap <b>Send on WhatsApp</b>, attach the screenshot and press send. Your order details are already written for you.
               </span>
             </li>
             <li>
               <span>
-                <b>Attach the screenshot</b> and press send. We'll reply to confirm.
+                We reply with how to pay <b>half ({money(deposit)})</b> online. Your order is registered once it's paid.
+              </span>
+            </li>
+            <li>
+              <span>
+                Pay the <b>other half ({money(rest)})</b> when your order arrives.
               </span>
             </li>
           </ol>

@@ -2,12 +2,12 @@
 
 An online shop for a small winter clothing business, with a **React** website
 and a **Node.js + Express** backend. Customers browse, choose sizes and colours,
-and place a cash-on-delivery order. They then send their receipt screenshot on
+and place an order (half paid online, half on delivery). They then send their receipt screenshot on
 **WhatsApp**. You manage everything from a private, secured dashboard.
 
 - 🚚 **Free delivery to your door on orders over $99**
 - 📍 **Delivery to all of Iraq & Kurdistan** (every governorate)
-- 💵 **Cash on delivery** · pre-orders shipped together by sea or air
+- 💵 **Half now online, half on delivery** · pre-orders shipped together by sea or air
 
 ---
 
@@ -20,7 +20,7 @@ and place a cash-on-delivery order. They then send their receipt screenshot on
    You see the real order — customer, phone, full address, every item with size, colour and price, and the total — so you can confirm the screenshot matches.
    Then click **"Receipt matches — confirm order"**.
 5. **Batch & supplier** adds up all confirmed orders into one shopping list for your supplier. You order everything together and ship it by sea or air.
-6. You deliver and collect the cash.
+6. You deliver and collect the other half.
 
 ---
 
@@ -80,6 +80,7 @@ your password, never the password itself, and git ignores it.
 | `whatsappDisplay` | How the number is shown to customers (`0750 922 5927`) |
 | `instagram` | Your Instagram handle without `@` |
 | `shippingFlat` / `freeShippingThreshold` | Delivery charge, and the order amount from which delivery is free (**99**) |
+| `depositPercent` | Share of the total paid online to register the order (**50**). The rest is paid on delivery. |
 | `deliveryArea` | Shown to customers ("all of Iraq & Kurdistan") |
 | `deliveryEstimate` | e.g. `"3–5 weeks"` |
 | `batchTarget` | How many confirmed orders you want before placing a supplier order |

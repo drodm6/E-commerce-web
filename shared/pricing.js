@@ -15,3 +15,11 @@ export function computeTotals(lines) {
   const shipping = round2(shippingFor(subtotal, lines.length));
   return { subtotal, shipping, total: round2(subtotal + shipping) };
 }
+
+// How an order total is split: the part paid online to register the order,
+// and the rest paid on delivery. The deposit is rounded up to the cent.
+export function paymentSplit(total) {
+  const cents = Math.round(Number(total) * 100);
+  const depositCents = Math.ceil((cents * STORE.depositPercent) / 100);
+  return { deposit: depositCents / 100, rest: (cents - depositCents) / 100 };
+}

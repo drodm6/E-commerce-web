@@ -252,7 +252,7 @@ export default function ProductModal({ product, originRect, onClose, onAdd }) {
             <li>
               <IconCash size={20} />
               <span>
-                <b>Cash on delivery</b> — pay nothing until it reaches you
+                <b>Half now, half on delivery</b> — pay half online to register your order, the rest when it arrives
               </span>
             </li>
             <li>

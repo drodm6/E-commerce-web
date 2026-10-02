@@ -6,7 +6,7 @@ import {
   sanitizeProduct, sanitizeProducts, safeImageUrl, validateCustomer, sanitizeCart, cleanText,
   validateOrderInput, validateProductInput, validateOrderUpdate,
 } from "../shared/validate.js";
-import { computeTotals } from "../shared/pricing.js";
+import { computeTotals, paymentSplit } from "../shared/pricing.js";
 import { STORE } from "../shared/store.js";
 import { verifyTotp, totpAt, generateSecret, currentStep } from "../server/security/totp.js";
 import { hashPassword, verifyPassword } from "../server/security/password.js";
@@ -70,6 +70,16 @@ test("delivery is free from the free-delivery amount", () => {
   const free = STORE.freeShippingThreshold;
   assert.equal(computeTotals([{ price: free, qty: 1 }]).shipping, 0);
   assert.equal(computeTotals([{ price: free - 0.01, qty: 1 }]).shipping, STORE.shippingFlat);
+});
+
+test("half now, half on delivery always adds up to the total", () => {
+  assert.deepEqual(paymentSplit(100), { deposit: 50, rest: 50 });
+  assert.deepEqual(paymentSplit(76.99), { deposit: 38.5, rest: 38.49 });
+  for (const t of [0.01, 4.99, 99.5, 153.37, 1234.57]) {
+    const { deposit, rest } = paymentSplit(t);
+    assert.equal(Math.round((deposit + rest) * 100), Math.round(t * 100));
+    assert.ok(deposit >= rest);
+  }
 });
 
 test("TOTP: matches RFC 6238 test vector, rejects replay", () => {

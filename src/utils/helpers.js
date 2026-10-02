@@ -1,5 +1,5 @@
 import { STORE } from "../config.js";
-export { round2, shippingFor, computeTotals } from "../../shared/pricing.js";
+export { round2, shippingFor, computeTotals, paymentSplit } from "../../shared/pricing.js";
 
 const currencyFormat = new Intl.NumberFormat(STORE.currency.locale, {
   style: "currency",

@@ -22,6 +22,9 @@ export const STORE = {
 
   // Delivery charge, and the subtotal from which delivery is free.
   shippingFlat: 4.99,
+  // Share of the total the customer pays online to register the order (%).
+  // The rest is paid when the order arrives.
+  depositPercent: 50,
   freeShippingThreshold: 99,
 
   // Where you deliver (shown to customers).

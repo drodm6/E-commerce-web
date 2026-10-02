@@ -4,7 +4,7 @@ import { useDialog } from "../hooks/useDialog.js";
 import GarmentArt from "../components/GarmentArt.jsx";
 import { IconClose, IconWhatsApp, IconCopy, IconCheck } from "../components/Icons.jsx";
 import { api } from "../api.js";
-import { money, formatDate, copyText } from "../utils/helpers.js";
+import { money, formatDate, copyText, paymentSplit } from "../utils/helpers.js";
 import { ORDER_STATUSES } from "../utils/validate.js";
 import { customerWhatsApp } from "./adminUtils.js";
 
@@ -252,8 +252,16 @@ export default function OrderDetail({ orderNumber, guard, onClose, onChanged, on
                     <dd>{o.shipping === 0 ? "Free" : money(o.shipping)}</dd>
                   </div>
                   <div className="adm-sum-total">
-                    <dt>Cash to collect</dt>
+                    <dt>Total</dt>
                     <dd>{money(o.total)}</dd>
+                  </div>
+                  <div>
+                    <dt>Half online (to register)</dt>
+                    <dd>{money(paymentSplit(o.total).deposit)}</dd>
+                  </div>
+                  <div>
+                    <dt>Cash to collect on delivery</dt>
+                    <dd>{money(paymentSplit(o.total).rest)}</dd>
                   </div>
                 </dl>
               </section>

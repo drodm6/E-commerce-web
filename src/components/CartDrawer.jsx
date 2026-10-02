@@ -2,7 +2,7 @@ import { useRef, useState, useId } from "react";
 import { ProductVisual } from "./GarmentArt.jsx";
 import { IconClose, IconMinus, IconPlus, IconTrash, IconShip, IconArrowRight, IconBag } from "./Icons.jsx";
 import { useDialog, useExitAnimation } from "../hooks/useDialog.js";
-import { money, moneyWhole, computeTotals } from "../utils/helpers.js";
+import { money, moneyWhole, computeTotals, paymentSplit } from "../utils/helpers.js";
 import { validateCustomer, CUSTOMER_FIELDS, LIMITS } from "../utils/validate.js";
 import { STORE, GOVERNORATES } from "../config.js";
 import "./CartDrawer.css";
@@ -161,7 +161,7 @@ export default function CartDrawer({ lines, onClose, onQtyChange, onRemove, onPl
                     <IconShip size={20} />
                     <p>
                       <b>Pre-order:</b> we collect orders and ship them together by sea or air to keep prices low. Delivered to {STORE.deliveryArea}{" "}
-                      in about {STORE.deliveryEstimate}. Free delivery on orders over {moneyWhole(STORE.freeShippingThreshold)}. You pay in cash when it arrives.
+                      in about {STORE.deliveryEstimate}. Free delivery on orders over {moneyWhole(STORE.freeShippingThreshold)}. You pay half online to register your order, and the other half when it arrives.
                     </p>
                   </div>
                 </>
@@ -231,8 +231,9 @@ export default function CartDrawer({ lines, onClose, onQtyChange, onRemove, onPl
                   }}
                 />
                 <span>
-                  I understand this is a <b>pre-order</b>: it ships by sea or air in about {STORE.deliveryEstimate}, and I'll pay{" "}
-                  <b>{money(total)}</b> in cash on delivery.
+                  I agree to pay <b>half ({money(paymentSplit(total).deposit)})</b> online to register my order, and the{" "}
+                  <b>other half ({money(paymentSplit(total).rest)})</b> when it arrives. I understand this is a pre-order that ships by
+                  sea or air in about {STORE.deliveryEstimate}.
                 </span>
               </label>
               {agreeError && <p className="field-error">Please tick the box to continue.</p>}
@@ -257,6 +258,7 @@ export default function CartDrawer({ lines, onClose, onQtyChange, onRemove, onPl
 }
 
 function Totals({ subtotal, shipping, total }) {
+  const { deposit, rest } = paymentSplit(total);
   return (
     <dl className="totals">
       <div>
@@ -268,8 +270,16 @@ function Totals({ subtotal, shipping, total }) {
         <dd>{shipping === 0 ? "Free" : money(shipping)}</dd>
       </div>
       <div className="totals-grand">
-        <dt>Total · cash on delivery</dt>
+        <dt>Total</dt>
         <dd>{money(total)}</dd>
+      </div>
+      <div className="totals-split">
+        <dt>Pay now online (half)</dt>
+        <dd>{money(deposit)}</dd>
+      </div>
+      <div className="totals-split">
+        <dt>Pay when it arrives</dt>
+        <dd>{money(rest)}</dd>
       </div>
     </dl>
   );
