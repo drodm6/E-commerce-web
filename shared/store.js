@@ -10,9 +10,7 @@ export const STORE = {
   // WhatsApp number that customers send their receipt screenshot to.
   // International format, DIGITS ONLY: no "+", no "00", no spaces.
   //   ✅ "9647501234567"     ❌ "+964 750 123 4567"
-  whatsappNumber: "9647509225927",
-  // How the number is shown to customers.
-  whatsappDisplay: "0750 922 5927",
+  whatsappNumber: "0000000000",
 
   // Instagram handle without the "@". Leave "" to hide Instagram links.
   instagram: "frost.store",
@@ -22,7 +20,7 @@ export const STORE = {
 
   // Delivery charge, and the subtotal from which delivery is free.
   shippingFlat: 4.99,
-  freeShippingThreshold: 80,
+  freeShippingThreshold: 99,
 
   // Where you deliver (shown to customers).
   deliveryArea: "all of Iraq & Kurdistan",
@@ -44,6 +42,7 @@ export const GOVERNORATES = [
   "Halabja",
   "Baghdad",
   "Basra",
+  "Mosul",
   "Nineveh",
   "Kirkuk",
   "Anbar",

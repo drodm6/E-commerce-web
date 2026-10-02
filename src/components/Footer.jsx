@@ -17,7 +17,7 @@ export default function Footer() {
             <span className="brand-word">FROST</span>
           </div>
           <p>
-            A small winter clothing shop. We hand-pick every piece, collect orders, and ship them together by sea so you get
+            A small winter clothing shop. We hand-pick every piece, collect orders, and ship them together by sea or air so you get
             great quality at honest prices.
           </p>
         </div>

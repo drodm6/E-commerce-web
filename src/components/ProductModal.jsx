@@ -246,7 +246,7 @@ export default function ProductModal({ product, originRect, onClose, onAdd }) {
             <li>
               <IconShip size={20} />
               <span>
-                <b>Shipped by sea</b> with our next batch · arrives in about {STORE.deliveryEstimate}
+                <b>Shipped by sea or air</b> with our next batch · arrives in about {STORE.deliveryEstimate}
               </span>
             </li>
             <li>

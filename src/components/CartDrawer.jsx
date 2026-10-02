@@ -160,7 +160,7 @@ export default function CartDrawer({ lines, onClose, onQtyChange, onRemove, onPl
                   <div className="preorder-note">
                     <IconShip size={20} />
                     <p>
-                      <b>Pre-order:</b> we collect orders and ship them together by sea to keep prices low. Delivered to {STORE.deliveryArea}{" "}
+                      <b>Pre-order:</b> we collect orders and ship them together by sea or air to keep prices low. Delivered to {STORE.deliveryArea}{" "}
                       in about {STORE.deliveryEstimate}. Free delivery on orders over {moneyWhole(STORE.freeShippingThreshold)}. You pay in cash when it arrives.
                     </p>
                   </div>
