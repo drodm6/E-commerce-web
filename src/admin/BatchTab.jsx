@@ -154,13 +154,13 @@ export default function BatchTab({ orders, guard, refresh }) {
           <div>
             <b>{ordered.length}</b>
             <span>Ordered from supplier</span>
-            <button className="adm-btn adm-btn-sm adm-btn-ghost" disabled={!ordered.length || busy} onClick={() => move("ordered", "shipping", "Mark as shipping by sea")}>
-              Shipped by sea →
+            <button className="adm-btn adm-btn-sm adm-btn-ghost" disabled={!ordered.length || busy} onClick={() => move("ordered", "shipping", "Mark as shipping")}>
+              Shipped →
             </button>
           </div>
           <div>
             <b>{shipping.length}</b>
-            <span>Shipping by sea</span>
+            <span>Shipping</span>
             <button className="adm-btn adm-btn-sm adm-btn-ghost" disabled={!shipping.length || busy} onClick={() => move("shipping", "arrived", "Mark as arrived")}>
               Arrived →
             </button>

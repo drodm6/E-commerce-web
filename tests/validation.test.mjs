@@ -7,6 +7,7 @@ import {
   validateOrderInput, validateProductInput, validateOrderUpdate,
 } from "../shared/validate.js";
 import { computeTotals } from "../shared/pricing.js";
+import { STORE } from "../shared/store.js";
 import { verifyTotp, totpAt, generateSecret, currentStep } from "../server/security/totp.js";
 import { hashPassword, verifyPassword } from "../server/security/password.js";
 
@@ -65,9 +66,10 @@ test("cart: unknown, invalid and over-stock lines are cleaned", () => {
   assert.equal(sanitizeCart([{ id: "P-1001", qty: 1, size: "XXXL", color: "Camel" }], products).length, 0);
 });
 
-test("delivery is free from $80", () => {
-  assert.equal(computeTotals([{ price: 80, qty: 1 }]).shipping, 0);
-  assert.equal(computeTotals([{ price: 79.99, qty: 1 }]).shipping, 4.99);
+test("delivery is free from the free-delivery amount", () => {
+  const free = STORE.freeShippingThreshold;
+  assert.equal(computeTotals([{ price: free, qty: 1 }]).shipping, 0);
+  assert.equal(computeTotals([{ price: free - 0.01, qty: 1 }]).shipping, STORE.shippingFlat);
 });
 
 test("TOTP: matches RFC 6238 test vector, rejects replay", () => {

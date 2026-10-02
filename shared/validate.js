@@ -27,7 +27,7 @@ export const ORDER_STATUSES = [
   { id: "new", label: "New" },
   { id: "confirmed", label: "Confirmed" },
   { id: "ordered", label: "Ordered from supplier" },
-  { id: "shipping", label: "Shipping by sea" },
+  { id: "shipping", label: "Shipping (sea or air)" },
   { id: "arrived", label: "Arrived" },
   { id: "delivered", label: "Delivered" },
   { id: "cancelled", label: "Cancelled" },

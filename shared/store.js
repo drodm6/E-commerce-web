@@ -10,7 +10,9 @@ export const STORE = {
   // WhatsApp number that customers send their receipt screenshot to.
   // International format, DIGITS ONLY: no "+", no "00", no spaces.
   //   ✅ "9647501234567"     ❌ "+964 750 123 4567"
-  whatsappNumber: "0000000000",
+  whatsappNumber: "9647509225927",
+  // How the number is shown to customers.
+  whatsappDisplay: "0750 922 5927",
 
   // Instagram handle without the "@". Leave "" to hide Instagram links.
   instagram: "frost.store",
@@ -29,7 +31,7 @@ export const STORE = {
   deliveryEstimate: "3–5 weeks",
 
   // How many confirmed orders you collect before placing one combined
-  // supplier order (shipped by sea). Used by the admin "Batch" tab.
+  // supplier order (shipped by sea or air). Used by the admin "Batch" tab.
   batchTarget: 20,
 };
 

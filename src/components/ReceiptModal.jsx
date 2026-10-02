@@ -104,7 +104,7 @@ export default function ReceiptModal({ order, onClose }) {
             </div>
             <div>
               <dt>Est. delivery</dt>
-              <dd>{STORE.deliveryEstimate} (by sea)</dd>
+              <dd>{STORE.deliveryEstimate} (by sea or air)</dd>
             </div>
           </dl>
 

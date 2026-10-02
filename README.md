@@ -5,9 +5,9 @@ and a **Node.js + Express** backend. Customers browse, choose sizes and colours,
 and place a cash-on-delivery order. They then send their receipt screenshot on
 **WhatsApp**. You manage everything from a private, secured dashboard.
 
-- 🚚 **Free delivery to your door on orders over $80**
+- 🚚 **Free delivery to your door on orders over $99**
 - 📍 **Delivery to all of Iraq & Kurdistan** (every governorate)
-- 💵 **Cash on delivery** · pre-orders shipped together by sea
+- 💵 **Cash on delivery** · pre-orders shipped together by sea or air
 
 ---
 
@@ -19,7 +19,7 @@ and place a cash-on-delivery order. They then send their receipt screenshot on
 4. In your dashboard, go to **Orders → Check a WhatsApp receipt** and type the order number from the screenshot.
    You see the real order — customer, phone, full address, every item with size, colour and price, and the total — so you can confirm the screenshot matches.
    Then click **"Receipt matches — confirm order"**.
-5. **Batch & supplier** adds up all confirmed orders into one shopping list for your supplier. You order everything together and ship it by sea.
+5. **Batch & supplier** adds up all confirmed orders into one shopping list for your supplier. You order everything together and ship it by sea or air.
 6. You deliver and collect the cash.
 
 ---
@@ -79,7 +79,7 @@ your password, never the password itself, and git ignores it.
 | `whatsappNumber` | Your WhatsApp number, **digits only in international format** (set to `9647509225927`) |
 | `whatsappDisplay` | How the number is shown to customers (`0750 922 5927`) |
 | `instagram` | Your Instagram handle without `@` |
-| `shippingFlat` / `freeShippingThreshold` | Delivery charge, and the order amount from which delivery is free (**80**) |
+| `shippingFlat` / `freeShippingThreshold` | Delivery charge, and the order amount from which delivery is free (**99**) |
 | `deliveryArea` | Shown to customers ("all of Iraq & Kurdistan") |
 | `deliveryEstimate` | e.g. `"3–5 weeks"` |
 | `batchTarget` | How many confirmed orders you want before placing a supplier order |
@@ -94,7 +94,7 @@ The list of governorates customers can choose from is `GOVERNORATES` in the same
 - **Orders:** every order appears the moment a customer places it. You can:
   - **Check a WhatsApp receipt** by order number. If the number doesn't exist, the screenshot is fake or edited.
   - Open **full details**: customer name, phone (tap to call or WhatsApp), governorate, city, address, note, every item with product ID, size, colour, quantity and price, the total to collect, the status timeline, a private note, and the customer's other orders.
-  - Change status (New → Confirmed → Ordered from supplier → Shipping by sea → Arrived → Delivered, or Cancelled). Cancelling puts the items back in stock.
+  - Change status (New → Confirmed → Ordered from supplier → Shipping (sea or air) → Arrived → Delivered, or Cancelled). Cancelling puts the items back in stock.
   - Search by order number, name, phone, city or address, and export CSV.
 - **Products:** add, edit, duplicate and delete. Changes are **live on the shop immediately**. You can also back up or import the catalog as JSON.
 - **Photos:** each product can have **1 to 5 photos**. In the product editor, tap **Upload photos** and pick them from your phone or computer. They're shrunk automatically before upload, so large phone photos are fine. Use the ← → buttons to reorder: the first photo is the main one shown on the product card. You can also paste an `https://` photo link instead. Uploaded photos are saved in `data/uploads/`, next to the database, so back up the whole `data/` folder.

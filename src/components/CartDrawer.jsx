@@ -231,7 +231,7 @@ export default function CartDrawer({ lines, onClose, onQtyChange, onRemove, onPl
                   }}
                 />
                 <span>
-                  I understand this is a <b>pre-order</b>: it ships by sea in about {STORE.deliveryEstimate}, and I'll pay{" "}
+                  I understand this is a <b>pre-order</b>: it ships by sea or air in about {STORE.deliveryEstimate}, and I'll pay{" "}
                   <b>{money(total)}</b> in cash on delivery.
                 </span>
               </label>

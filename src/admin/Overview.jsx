@@ -101,7 +101,7 @@ export default function Overview({ products, orders, guard, onGo, openOrder, onS
           </div>
           <p className="adm-muted">
             {confirmed.length >= STORE.batchTarget
-              ? "Target reached — time to place the supplier order and ship by sea."
+              ? "Target reached — time to place the supplier order and ship it."
               : `${STORE.batchTarget - confirmed.length} more confirmed orders until your batch target.`}
           </p>
           <div className="adm-card-head">

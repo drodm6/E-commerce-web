@@ -13,7 +13,7 @@ website before paying.
 
 - [ ] **Your Instagram handle.** Open `shared/store.js` and set `instagram:` to your real handle (without `@`). It is currently a placeholder, `frost.store`.
 - [ ] **Your WhatsApp number** is already set to `0750 922 5927`.
-- [ ] **Prices and delivery** in `shared/store.js`: currency (USD), delivery charge (`shippingFlat`), free delivery from $80, delivery time.
+- [ ] **Prices and delivery** in `shared/store.js`: currency (USD), delivery charge (`shippingFlat`), free delivery from $99, delivery time.
 - [ ] **Admin sign-in:** you have run `npm run setup-admin` on your computer and can sign in at `/#dabo` with your password + authenticator code.
 - [ ] **A payment card** that works online (Visa/Mastercard, a virtual card works too), for the hosting and the domain.
 - [ ] **Push your latest changes** to GitHub (`git push`).
