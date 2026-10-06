@@ -1,13 +1,51 @@
 # Frost — Winter Clothing Shop
 
-An online shop for a small winter clothing business, with a **React** website
-and a **Node.js + Express** backend. Customers browse, choose sizes and colours,
-and place an order (half paid online, half on delivery). They then send their receipt screenshot on
-**WhatsApp**. You manage everything from a private, secured dashboard.
+> A complete online shop for a small winter-clothing business in Iraq & Kurdistan:
+> a fast, mobile-first storefront, WhatsApp order confirmation, and a private,
+> two-factor-protected dashboard. React + Node.js/Express + SQLite.
 
-- 🚚 **Free delivery to your door on orders over $99**
-- 📍 **Delivery to all of Iraq & Kurdistan** (every governorate)
-- 💵 **Half now online, half on delivery** · pre-orders shipped together by sea or air
+**Going live at frostshop.store?** Follow [DEPLOY.md](DEPLOY.md).
+
+## About
+
+Frost is built for a business that **pre-orders winter clothing from Chinese
+suppliers, batches the orders, and ships them together** (by sea or air) to keep
+prices low. There is no online card checkout. Customers place an order, **pay half
+online to register it and the other half on delivery**, and confirm by sending a
+**screenshot of their receipt on WhatsApp**. The owner checks that receipt
+against the real order in a secure dashboard and confirms it.
+
+### Features
+
+**For customers**
+- Clean brown / black / cream storefront that works well on phones, with search, categories and sorting
+- Product view with a **1–5 photo slider** (auto-advances every 5 seconds), colours, sizes, size guide and delivery info
+- Bag and checkout with every governorate of Iraq & Kurdistan
+- **Free delivery over $99** and delivery to all of Iraq & Kurdistan
+- A compact **receipt that fits one phone screenshot**, with the owner's WhatsApp number, a one-tap "Send on WhatsApp" message and a working copy button
+- Floating WhatsApp button on every page
+- Receipts are saved on the device and can be reopened later
+
+**For the owner (private dashboard at `/#dabo`)**
+- Sign-in with a strong password **plus an authenticator-app code**
+- Every order with full customer, address, item, size, colour and price detail, plus a "check a WhatsApp receipt" lookup
+- Order statuses from New to Delivered, search, CSV export
+- Products: add, edit, duplicate, delete, upload 1–5 photos from a phone or computer, with JSON backup/import
+- Batch & supplier view: one combined shopping list of all confirmed orders
+- Activity log of sign-ins and changes
+
+**Security** (checked against the OWASP Top 10, with automated tests): scrypt passwords, TOTP 2FA, httpOnly session cookies, rate limiting, strict CSP, server-side price and stock checks, upload validation, and no secrets in the website or in git. Details [below](#security).
+
+### Tech stack
+
+| Part | Technology |
+|---|---|
+| Website | React 18, Vite, plain CSS, self-hosted fonts |
+| Server | Node.js 20+, Express 5 |
+| Database | SQLite (`better-sqlite3`, WAL mode), one file |
+| Security | Helmet, express-rate-limit, JWT sessions, scrypt, TOTP (RFC 6238) |
+| Tests | Node's built-in test runner (`npm test`) |
+| Hosting | One Node app (serves site + API). Railway or a small VPS with Caddy. |
 
 ---
 
@@ -28,12 +66,12 @@ and place an order (half paid online, half on delivery). They then send their re
 
 <table>
   <tr>
-    <td width="50%" valign="top"><img src="screenshots/home.png" alt="Home page" /><p align="center"><em>Home: delivery promises up front</em></p></td>
+    <td width="50%" valign="top"><img src="screenshots/home.png" alt="Home page" /><p align="center"><em>Home: delivery promises up front, two simple buttons</em></p></td>
     <td width="50%" valign="top"><img src="screenshots/shop.png" alt="Product grid" /><p align="center"><em>Clean, light product grid</em></p></td>
   </tr>
   <tr>
     <td width="50%" valign="top"><img src="screenshots/product.png" alt="Product details" /><p align="center"><em>Product view: colours, sizes, size guide, delivery info</em></p></td>
-    <td width="50%" valign="top"><img src="screenshots/receipt.png" alt="Receipt" /><p align="center"><em>Receipt to screenshot and send on WhatsApp</em></p></td>
+    <td width="50%" valign="top"><img src="screenshots/receipt.png" alt="Receipt" /><p align="center"><em>Receipt: fits one phone screenshot, half now / half on delivery</em></p></td>
   </tr>
   <tr>
     <td width="50%" valign="top"><img src="screenshots/admin-order-detail.png" alt="Order detail in the dashboard" /><p align="center"><em>Dashboard: full order detail to check a receipt</em></p></td>
@@ -144,18 +182,20 @@ Set these environment variables on your host. The first three come from your `se
 | `ADMIN_PASSWORD_HASH` | from `server/.env` |
 | `ADMIN_TOTP_SECRET` | from `server/.env` |
 | `JWT_SECRET` | from `server/.env` (required in production) |
-| `NODE_ENV` | `production` |
-| `DB_PATH` | a file on the persistent disk, e.g. `/var/data/frost.db` |
+| `DB_PATH` | a file on the persistent disk, e.g. `/data/frost.db` |
+| `UPLOADS_DIR` | a folder on the same disk for product photos, e.g. `/data/uploads` |
 | `TRUST_PROXY` | `1` (default in production). Set `0` only if nothing sits in front of the server. |
 
-Always use **HTTPS**. The database is a single file; copy `DB_PATH` regularly as a backup.
+`npm start` always runs in production mode, so `NODE_ENV` and `PORT` need no setting on most hosts.
+
+Always use **HTTPS**. The database is a single file; run `npm run backup` regularly. It copies the database and photos into `backups/`.
 
 ---
 
 ## Security
 
 Built and checked against the **OWASP Top 10** and OWASP cheat sheets. Run the
-28 automated security and API tests with `npm test`.
+30 automated security and API tests with `npm test`.
 
 | Area | What's in place |
 |---|---|
@@ -194,7 +234,14 @@ Built and checked against the **OWASP Top 10** and OWASP cheat sheets. Run the
 │   ├── api.js               # API client
 │   ├── Storefront.jsx       # shop, bag, checkout
 │   ├── components/          # Header, Hero, ProductModal, CartDrawer, ReceiptModal…
-│   └── admin/               # dashboard (#dabo)
+│   └── admin/               # dashboard (#dabo), incl. PhotoManager (photo upload)
 ├── tests/                   # npm test
-└── scripts/dev.mjs          # npm run dev
+├── scripts/
+│   ├── dev.mjs              # npm run dev (site + API together)
+│   ├── start.mjs            # npm start (production)
+│   └── backup.mjs           # npm run backup (database + photos)
+├── deploy/                  # Caddyfile + systemd service for a VPS
+├── railway.json             # Railway build/start settings
+├── DEPLOY.md                # step-by-step: hosting, domain, DNS
+└── public/products/         # product photos you ship with the site
 ```
