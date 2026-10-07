@@ -5,26 +5,28 @@ Upload in this order: slide1 → slide2 → slide3 (all 1080×1350, 4:5, the siz
 ## Caption (copy everything between the lines)
 ---
 Stay cool. Stay Frost. ❄️
-
-Frost is here, a new premium clothing brand made for cold days and good taste. Our first winter collection is almost ready: premium puffer jackets, quality fabrics, designed by Frost.
+Authentic winter style is here: premium puffer jackets, quality fabrics, designed by Frost. Our first winter collection is almost ready.
 
 هێمن بمێنە. فرۆست بمێنە. ❄️
-فرۆست هات، براندێکی نوێی جلوبەرگی پریمیەم بۆ ڕۆژە ساردەکان و سەلیقەی جوان. یەکەم کۆلێکشنی زستانمان بەم زووانە ئامادە دەبێت: چاکەتی پریمیەم، قوماشی کوالێتی بەرز، دیزاینی فرۆست.
+ستایلی زستانەی ڕەسەن گەیشت: چاکەتی پریمیەم، قوماشی کوالێتی بەرز، دیزاینی فرۆست. یەکەم کۆلێکشنی زستانمان بەم زووانە ئامادە دەبێت.
 
-🚚 Delivery across Iraq & Kurdistan | گەیاندن بۆ هەموو عێراق و کوردستان
-🔔 Follow and turn on notifications so you see the drop first.
-💬 Comment ❄️ if you want to be first in line | ❄️ بنووسە ئەگەر دەتەوێت یەکەم کەس بیت
+خلّيك رايق. خلّيك فروست. ❄️
+وصل الستايل الشتوي الأصيل: جاكيتات فاخرة، أقمشة عالية الجودة، تصميم فروست. أول مجموعة شتوية لنا قريباً.
 
-#frost #فرۆست #premiumclothing #pufferjacket #winterfashion #menswear #kurdistan #erbil #هەولێر #سلێمانی #iraqfashion #جلوبەرگ
+🚚 Delivery across Iraq & Kurdistan | گەیاندن بۆ هەموو عێراق و کوردستان | توصيل لكل العراق وكردستان
+🔔 Follow & turn on notifications | فۆڵۆمان بکە | تابعنا وفعّل الإشعارات
+💬 Comment ❄️ to be first in line | ❄️ بنووسە | اكتب ❄️ لتكون أول من يعرف
+
+#frost #فرۆست #فروست #premiumclothing #pufferjacket #kurdistan #erbil #هەولێر #العراق #ملابس_شتوية #ازياء_رجالية #بغداد
 ---
 
 ## Alt text (Edit → Advanced settings → Write alt text)
-Slide 1: Dark brown and gold Frost brand graphic reading "Stay cool. Stay Frost." in English and Kurdish Sorani.
+Slide 1: Dark brown and gold Frost brand graphic reading "Stay cool. Stay Frost." in English, Kurdish Sorani and Arabic.
 Slide 2: Frost announcement of a premium puffer jacket winter collection, coming soon.
 Slide 3: Frost delivers across Iraq and Kurdistan. Follow @frost.store99.
 
 ## Settings when posting
-- Location: your city (e.g. Erbil / Sulaymaniyah). Location tags help local discovery.
+- Location: your city (e.g. Erbil / Sulaymaniyah / Baghdad). Location tags help local discovery.
 - Add music to the carousel (a calm, chill track). Carousels with music can also be shown in Reels.
 - Leave "Share to Facebook" on if your Facebook Page is linked.
 
@@ -32,7 +34,7 @@ Slide 3: Frost delivers across Iraq and Kurdistan. Follow @frost.store99.
 - **Carousel:** Instagram can show it again to people who skipped slide 1, so it gets a second chance in the feed.
 - **Keywords in caption and alt text:** Instagram search reads both; "premium clothing", "puffer jacket" and city names are what local buyers search.
 - **Comment ❄️ call to action:** comments and replies in the first hour are a strong signal. Reply to every comment quickly.
-- **Bilingual:** English helps search and wider reach; Sorani is what your local customers relate to.
+- **Three languages:** English helps search and wider reach; Sorani and Arabic reach Kurdish and Arabic-speaking customers across Iraq. Instagram search indexes all three.
 - **Few, specific hashtags:** 8–12 relevant ones work better than 30 generic ones.
 
 ## Posting checklist

@@ -40,6 +40,10 @@
   .rule { width: 160px; height: 2px; margin: 48px auto; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
   .ku { font-family: "Vazirmatn", sans-serif; direction: rtl; font-weight: 600; font-size: 54px; line-height: 1.6; color: var(--cream); }
   .ku.sm { font-size: 36px; font-weight: 400; color: var(--sand); }
+  .ar { font-family: "Vazirmatn", sans-serif; direction: rtl; font-weight: 400; font-size: 44px; line-height: 1.6; color: var(--gold-hi); }
+  .ar.sm { font-size: 32px; color: var(--sand); opacity: .85; }
+  .item .stack { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.35; }
+  .item .stack .ar { font-size: 26px; color: var(--gold); }
   .en-sm { font-size: 30px; letter-spacing: 1px; color: var(--sand); line-height: 1.5; }
   .bottom {
     position: absolute; bottom: 104px; left: 0; right: 0; text-align: center;
@@ -47,7 +51,7 @@
   }
   .swipe { position: absolute; bottom: 104px; right: 100px; font-size: 22px; letter-spacing: 4px; color: var(--gold); }
   .list { display: grid; gap: 26px; margin: 0 auto; width: 720px; text-align: left; }
-  .item { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 22px 0; border-bottom: 1px solid rgba(196,154,108,.25); }
+  .item { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 14px 0; border-bottom: 1px solid rgba(196,154,108,.25); }
   .item .en { font-size: 34px; letter-spacing: .5px; }
   .item .ku { font-size: 32px; font-weight: 400; color: var(--sand); }
   .handle { font-family: "Playfair Display", serif; font-style: italic; font-size: 64px; color: var(--gold-hi); }
@@ -80,8 +84,9 @@
     <h1>Stay cool.<br><em>Stay Frost.</em></h1>
     <div class="rule"></div>
     <div class="ku">هێمن بمێنە. فرۆست بمێنە.</div>
+    <div class="ar">خلّيك رايق. خلّيك فروست.</div>
   </div>
-  <div class="bottom">Premium Clothing &nbsp;·&nbsp; Winter 2026</div>
+  <div class="bottom">Authentic Winter Style &nbsp;·&nbsp; 2026</div>
 </section>
 
 <!-- Slide 2: what's coming -->
@@ -90,15 +95,16 @@
   <div class="top"><div class="eyebrow">The first collection</div></div>
   <div class="center">
     <h2>Cold weather.<br><em>Warm style.</em></h2>
-    <div class="ku" style="margin-top:28px">کەشی سارد، ستایلی گەرم.</div>
+    <div class="ku" style="margin-top:20px;font-size:46px">کەشی سارد، ستایلی گەرم.</div>
+    <div class="ar" style="font-size:38px">طقس بارد، ستايل دافئ.</div>
     <div class="rule"></div>
     <div class="list">
-      <div class="item"><span class="en">Premium puffer jackets</span><span class="ku">چاکەتی پریمیەم</span></div>
-      <div class="item"><span class="en">High-quality fabrics</span><span class="ku">قوماشی کوالێتی بەرز</span></div>
-      <div class="item"><span class="en">Designed by Frost</span><span class="ku">دیزاینی فرۆست</span></div>
+      <div class="item"><span class="en">Premium puffer jackets</span><span class="stack"><span class="ku">چاکەتی پریمیەم</span><span class="ar">جاكيتات فاخرة</span></span></div>
+      <div class="item"><span class="en">High-quality fabrics</span><span class="stack"><span class="ku">قوماشی کوالێتی بەرز</span><span class="ar">أقمشة عالية الجودة</span></span></div>
+      <div class="item"><span class="en">Designed by Frost</span><span class="stack"><span class="ku">دیزاینی فرۆست</span><span class="ar">تصميم فروست</span></span></div>
     </div>
   </div>
-  <div class="bottom">Coming soon &nbsp;·&nbsp; بەم زووانە</div>
+  <div class="bottom">Coming soon &nbsp;·&nbsp; <bdi>بەم زووانە</bdi> &nbsp;·&nbsp; <bdi>قريباً</bdi></div>
 </section>
 
 <!-- Slide 3: call to action -->
@@ -110,10 +116,12 @@
   <div class="center">
     <div class="en-sm">Delivery across Iraq &amp; Kurdistan</div>
     <div class="ku sm" style="margin-top:8px">گەیاندن بۆ هەموو عێراق و کوردستان</div>
+    <div class="ar sm">توصيل لكل العراق وكردستان</div>
     <div class="rule"></div>
     <div class="handle">@frost.store99</div>
-    <div class="pill">Follow &nbsp;·&nbsp; فۆڵۆمان بکە</div>
+    <div class="pill">Follow &nbsp;·&nbsp; <bdi>فۆڵۆمان بکە</bdi> &nbsp;·&nbsp; <bdi>تابعنا</bdi></div>
     <div class="ku sm" style="margin-top:44px">ئاگادارکردنەوەکان چالاک بکە، یەکەم کەس بە</div>
+    <div class="ar sm">فعّل الإشعارات وكن أول من يعرف</div>
     <div class="en-sm" style="margin-top:6px">Turn on notifications. Be the first to know.</div>
   </div>
   <div class="bottom">Premium Clothing &nbsp;·&nbsp; Frost</div>
